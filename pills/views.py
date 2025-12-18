@@ -111,6 +111,15 @@ def detail(request, pill_pk):
     return Response(serializer.data)
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def category_list(request):
+    categories = Category.objects.all()
+    # 프론트에서 쓰기 편하게 id와 name만 추출
+    data = [{"id": c.id, "name": c.name} for c in categories]
+    return Response(data)
+
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

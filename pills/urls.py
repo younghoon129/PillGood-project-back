@@ -44,5 +44,6 @@ urlpatterns = [
         views.delete_comment,
         name='delete_comment',
     ),
+    path('categories/', views.category_list, name='category_list'),
     # path("filter-category/", views.filter_category, name="filter_category"),
 ]

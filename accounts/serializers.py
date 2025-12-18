@@ -36,3 +36,30 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'followers_count', 'followings_count',
         )
         read_only_fields = ('followings',) # 팔로잉은 별도 API로 제어 권장
+
+
+
+class SignupSerializer(serializers.ModelSerializer):
+    # 비밀번호는 쓰기 전용으로 설정 (응답에는 포함되지 않음)
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'username', 'password', 'email', 'gender', 'age', 
+            'weekly_avg_eating_time', 'annual_eating_amount', 
+            'profile_img', 'interested_genres'
+        )
+
+    def create(self, validated_data):
+        # ManyToMany 필드인 interested_genres는 따로 빼서 처리
+        genres = validated_data.pop('interested_genres', [])
+        
+        # create_user를 사용하여 비밀번호를 암호화하여 저장
+        user = User.objects.create_user(**validated_data)
+        
+        # 다대다 관계 설정
+        if genres:
+            user.interested_genres.set(genres)
+            
+        return user
