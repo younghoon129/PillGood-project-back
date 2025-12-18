@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container my-5">
+  <h1>쓰레드 수정</h1>
+  <hr />
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %} {{ form.non_field_errors }}
+    <div class="mb-3">
+      <label for="{{ form.title.id_for_label }}" class="form-label">제목</label>
+      {{ form.title }} {{ form.title.errors }}
+    </div>
+    <div class="mb-3">
+      <label for="{{ form.content.id_for_label }}" class="form-label"
+        >내용</label
+      >
+      {{ form.content }} {{ form.content.errors }}
+    </div>
+    <div class="mb-3">
+      <label for="{{ form.reading_date.id_for_label }}" class="form-label"
+        >독서일</label
+      >
+      {{ form.reading_date }} {{ form.reading_date.errors }}
+    </div>
+    <button type="submit" class="btn btn-outline-success">전송</button>
+  </form>
+  <a href="{% url 'pills:detail' pill.pk %}" class="btn btn-outline-danger mt-3"
+    >취소</a
+  >
+</div>
+{% endblock content %}

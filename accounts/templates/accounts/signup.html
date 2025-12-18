@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="container">
+  <header>
+    <h1>회원가입</h1>
+  </header>
+  <form action="{% url 'accounts:signup' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>
+      {{ form.username.label_tag }}<br>
+      {{ form.username }}
+    </p>
+    <p>
+      {{ form.password1.label_tag }}<br>
+      {{ form.password1 }}
+    </p>
+    <p>
+      {{ form.password2.label_tag }}<br>
+      {{ form.password2 }}
+    </p>
+    <p>
+      {{ form.email.label_tag }}<br>
+      {{ form.email }}
+    </p>
+    <p>
+      {{ form.last_name.label_tag }}<br>
+      {{ form.last_name }}
+    </p>
+    <p>
+      {{ form.first_name.label_tag }}<br>
+      {{ form.first_name }}
+    </p>
+    <p>
+      {{ form.gender.label_tag }}<br>
+      {{ form.gender }}
+    </p>
+    <p>
+      {{ form.age.label_tag }}<br>
+      {{ form.age }}
+    </p>
+    <p>
+      {{ form.weekly_avg_reading_time.label_tag }}<br>
+      {{ form.weekly_avg_reading_time }}
+    </p>
+    <p>
+      {{ form.annual_reading_amount.label_tag }}<br>
+      {{ form.annual_reading_amount }}
+    </p>
+    <p>
+      {{ form.profile_img.label_tag }}<br>
+      {{ form.profile_img }}
+    </p>
+    <p>
+      {{ form.interested_genres.label_tag }}<br>
+      {{ form.interested_genres }}
+    </p>
+    <button type="submit" class="btn btn-success">저장</button>
+  </form>
+</main>
+{% endblock content %}

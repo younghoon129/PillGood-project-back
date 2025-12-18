@@ -1,0 +1,103 @@
+{% extends 'base.html' %} {% block content %}
+<h1>{{ person.username }}님의 프로필</h1>
+<hr />
+
+{% if person.profile_img %}
+<img
+  src="{{ person.profile_img.url }}"
+  alt="프로필 사진"
+  style="
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 3rem;
+  "
+/>
+{% endif %}
+
+<p>아이디: {{ person.username }}</p>
+<p>이메일: {{ person.email }}</p>
+<p>이름: {{ person.last_name }}{{ person.first_name }}</p>
+<p>성별: {{ person.get_gender_display }}</p>
+<p>나이: {{ person.age }}</p>
+<p>
+  관심 장르: {% for category in person.interested_genres.all %}
+  <li>{{ category.name }}</li>
+  {% empty %} 없음 {% endfor %}
+</p>
+<hr />
+<div class="d-flex flex-row justify-content-between align-items-center">
+  <div>
+    팔로잉 :
+    <span id="followings-count">{{person.followings.all|length}}</span> / 팔로워
+    : <span id="followers-count">{{person.followers.all|length}}</span>
+  </div>
+  {% if request.user.is_authenticated and request.user != person %}
+  <form id="follow-form" data-user-id="{{ person.pk }}">
+    {% csrf_token %} {% if request.user in person.followers.all %}
+    <button type="submit" class="btn btn-outline-secondary">언팔로우</button>
+    {% else %}
+    <button type="submit" class="btn btn-primary">팔로우</button>
+    {% endif %}
+  </form>
+  {% endif %}
+</div>
+<hr />
+<h2>{{ person.username }}님의 쓰레드 목록</h2>
+<ul>
+  {% for thread in person.thread_set.all %}
+  <li>
+    <a href="{% url 'pills:thread_detail' thread.pill.pk thread.pk %}">
+      {{ thread.title }}
+    </a>
+    - 좋아요: {{ thread.likes.count }}
+  </li>
+  {% empty %}
+  <li>작성된 쓰레드가 없습니다.</li>
+  {% endfor %}
+</ul>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  const form = document.querySelector("#follow-form");
+  const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+  if (form) {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const userId = event.target.dataset.userId;
+
+      axios({
+        method: "post",
+        url: `/accounts/${userId}/follow/`,
+        headers: { "X-CSRFToken": csrftoken },
+      })
+        .then((response) => {
+          const isFollowed = response.data.is_followed;
+          const followBtn = document.querySelector("#follow-form > button");
+
+          if (isFollowed === true) {
+            followBtn.innerText = "언팔로우";
+            followBtn.classList.remove("btn-primary");
+            followBtn.classList.add("btn-outline-secondary");
+          } else {
+            followBtn.innerText = "팔로우";
+            followBtn.classList.remove("btn-outline-secondary");
+            followBtn.classList.add("btn-primary");
+          }
+
+          const followersCountTag = document.querySelector("#followers-count");
+          const followingsCountTag =
+            document.querySelector("#followings-count");
+
+          followersCountTag.innerText = response.data.followers_count;
+          followingsCountTag.innerText = response.data.followings_count;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+  }
+</script>
+{% endblock content %}

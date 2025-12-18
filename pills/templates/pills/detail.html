@@ -1,0 +1,78 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+<h1>영양제 상세 페이지</h1>
+
+<div style="width: 300px; margin-bottom: 1rem margin-top: 1rem">
+  <img
+    src="{% if pill.cover %}{{ pill.cover }}{% else %}{% static 'pills/pill.jpg' %}{% endif %}"
+    alt=""
+    class="w-100"
+  />
+</div>
+
+<div class="d-flex flex-row justify-content-between align-items-between my-3">
+  <h2>상품명 : {{ pill.PRDLST_NM }}</h2>
+  <small style="color: #888"> {{ pill.category }} </small>
+</div>
+<p>효과 : {{ pill.PRIMARY_FNCLTY }}</p>
+<hr />
+
+<!-- 작품 정보 섹션 -->
+<div
+  style="display: flex; justify-content: center; align-items: center; gap: 2rem"
+>
+  <!-- 작품 텍스트 정보 영역 -->
+  <div style="flex: 1">
+    <h6>제조사 : {{ pill.BSSH_NM }}</h6>
+    <h6>소비기한 : {{ pill.POG_DAYCNT }}</h6>
+    <h6>인허가 번호 : {{ pill.LCNS_NO }}</h6>
+  </div>
+</div>
+
+<!-- 작가 정보 섹션 (프로필 + 작가 텍스트 정보) -->
+<div
+  style="display: flex; justify-content: center; align-items: center; gap: 2rem"
+>
+  <!-- 작가 텍스트 정보 영역 -->
+</div>
+<div>
+  <small style="color: #888">
+    ※ 영양제 DB 제공 :
+    식품의약품안전처(https://www.foodsafetykorea.go.kr/api/newDatasetDetail.do)
+  </small>
+</div>
+
+<!-- Thread 영역 -->
+<hr />
+<div class="d-flex flex-row justify-content-between">
+  <h2>Thread</h2>
+  {% if user.is_authenticated %}
+  <a href="{% url 'pills:thread_create' pill.pk %}">쓰레드 작성</a>
+  {% endif %}
+</div>
+
+<div>
+  {% for thread in pill.thread_set.all %}
+  <div class="d-flex flex-row justify-content-between">
+    <a
+      href="{% url 'pills:thread_detail' pill.pk thread.pk %}"
+      class="d-flex justify-content-between align-items-center"
+    >
+      <div class="thread-info">
+        <span class="fw-bold">{{ thread.title }}</span>
+        <span class="separator">|</span>
+        <span>{{ thread.user.username }}</span>
+      </div>
+    </a>
+    <div><i class="bi bi-heart-fill me-1"></i> {{ thread.likes.count }}</div>
+  </div>
+  {% empty %}
+  <p>게시글이 없습니다.</p>
+  {% endfor %}
+</div>
+
+<hr />
+
+<div>
+  <a href="{% url 'pills:index' %}" class="btn btn-secondary mb-5">BACK</a>
+</div>
+{% endblock content %}

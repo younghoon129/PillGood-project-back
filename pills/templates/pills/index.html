@@ -1,0 +1,149 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+<h1>메인 페이지</h1>
+
+<!-- 기존 카테고리 필터 메뉴 -->
+ <div class="mb-4 p-3 bg-light rounded border">
+  <form id="search-form" class="d-flex flex-wrap gap-2 align-items-center">
+    
+    <select name="search_type" id="search-type" class="form-select" style="width: auto; min-width: 120px;">
+      <option value="">전체</option>
+      <option value="name">제품명</option>
+      <option value="company">제조사</option>
+      <option value="ingredient">성분</option>
+    </select>
+
+    <input 
+      type="text" 
+      name="keyword" 
+      id="search-keyword"
+      class="form-control" 
+      placeholder="검색어를 입력하세요"
+      style="width: auto; flex-grow: 1;"
+    >
+    
+    <button type="submit" class="btn btn-primary">검색</button>
+    <a href="{% url 'pills:index' %}" class="btn btn-outline-secondary">초기화</a>
+  </form>
+</div>
+
+
+
+<div>
+  <small style="color: #888">
+    ※ 영양제 DB 제공 :
+    식품의약품안전처(https://www.foodsafetykorea.go.kr/api/newDatasetDetail.do)
+  </small>
+</div>
+
+<!-- 도서 목록 컨테이너 -->
+<div class="row row-cols-1 row-cols-md-3 g-4 mt-4 mb-4" id="pills-list">
+  {% if pills %} {% for pill in pills %}
+  <div class="col">
+    <div class="card pill-card h-100">
+      <img
+        src="{% if pill.cover %}{{ pill.cover }}{% else %}{% static 'pills/pill.jpg' %}{% endif %}"
+        class="card-img-top"
+        alt="..."
+      />
+
+      <div class="card-body">
+        <h5 class="card-title">{{ pill.PRDLST_NM }}</h5>
+        <p class="card-text">{{ pill.PRIMARY_FNCLTY|truncatechars:100 }}</p>
+        <h6 class="card-subtitle mb-2">
+          <a href="{% url 'pills:detail' pill.pk %}" class="btn btn-success"
+            >Detail</a
+          >
+        </h6>
+      </div>
+    </div>
+  </div>
+  {% endfor %} {% else %}
+  <div>등록된 영양제가 없습니다.</div>
+  {% endif %}
+</div>
+{% endblock content %} {% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  // [수정됨] 1. 자바스크립트용 글자수 자르기 함수 (Django template filter 대체)
+  function truncateText(text, maxLength) {
+    if (!text) return '';
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + '...';
+    }
+    return text;
+  }
+
+  // 2. DOM 요소 선택
+  const searchForm = document.getElementById('search-form');
+  const pillsList = document.getElementById('pills-list');
+  // 기본 이미지 경로 미리 저장 (JS 문자열 내에서 사용하기 위함)
+  const defaultImgUrl = "{% static 'pills/pill.jpg' %}";
+
+  // 3. 검색 폼 제출 이벤트 리스너
+  searchForm.addEventListener('submit', function(event) {
+    // 폼 제출 시 페이지 새로고침 방지 (AJAX 사용을 위해 필수)
+    event.preventDefault();
+
+    // 입력값 가져오기
+    const searchType = document.getElementById('search-type').value;
+    const keyword = document.getElementById('search-keyword').value;
+
+    // 4. Axios 비동기 요청
+    axios.get("{% url 'pills:filter_category' %}", {
+      params: {
+        search_type: searchType,
+        keyword: keyword
+      }
+    })
+    .then((response) => {
+      // 5. 응답 처리
+      // views.py에서 JsonResponse로 보낸 키값 ('pills')
+      const pills = response.data.pills; 
+      
+      // 목록 초기화
+      pillsList.innerHTML = '';
+
+      // 검색 결과가 없을 경우 처리
+      if (pills.length === 0) {
+        pillsList.innerHTML = '<div class="col-12 text-center py-5">검색 결과가 없습니다.</div>';
+        return;
+      }
+
+      // 6. JSON 데이터를 기반으로 카드 HTML 생성
+      pills.forEach((pill) => {
+        // 이미지 처리 logic (null이면 기본 이미지)
+        let imgSrc = pill.cover ? pill.cover : defaultImgUrl;
+
+        // [수정됨] Template Literal 내에서는 Django 태그 사용 불가 -> JS 변수 사용
+        // pill.title, pill.company 등은 views.py의 JSON 키값과 일치해야 함
+        const cardHtml = `
+          <div class="col">
+            <div class="card pill-card h-100">
+              <img 
+                src="${imgSrc}" 
+                class="card-img-top" 
+                alt="${pill.title}"
+              >
+              <div class="card-body">
+                <h5 class="card-title">${pill.title}</h5>
+                <p class="card-text text-muted small">${pill.company}</p>
+                <p class="card-text">${truncateText(pill.description, 100)}</p>
+                <h6 class="card-subtitle mb-2">
+                  <a href="/pills/${pill.id}/" class="btn btn-success">Detail</a>
+                </h6>
+              </div>
+            </div>
+          </div>
+        `;
+        // 리스트에 추가
+        pillsList.insertAdjacentHTML('beforeend', cardHtml);
+      });
+    })
+    .catch((error) => {
+      console.error('AJAX Error:', error);
+    });
+  });
+</script>
+{% endblock script %}
+
+
