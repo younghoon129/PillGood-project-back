@@ -36,7 +36,8 @@ def login(request):
         return Response({
             'token': token.key,
             'username': user.username,
-            'id': user.id
+            'id': user.id,
+            'nickname': user.first_name if user.first_name else user.username
         })
     return Response({'error': '아이디 또는 비밀번호가 올바르지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -58,7 +59,8 @@ def signup(request):
         return Response({
             'token': token.key,
             'username': user.username,
-            'message': '회원가입이 완료되었습니다.'
+            'message': '회원가입이 완료되었습니다.',
+            'nickname': user.first_name if user.first_name else user.username
         }, status=status.HTTP_201_CREATED)
 
 
