@@ -1,5 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/django,venv,vue,vuejs,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=django,venv,vue,vuejs,python
+pills_fixture_data.json
+
 
 ### Django ###
 *.log
