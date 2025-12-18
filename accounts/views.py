@@ -93,7 +93,7 @@ def follow(request, user_pk):
     return JsonResponse(context)
 
 
-
+# -------------------------------------------------------------
 # 카카오 로그인 코드 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -156,3 +156,67 @@ def kakao_login(request):
         'nickname': f'kakao_{user.first_name}',
         'message': '카카오 로그인 성공'
     })
+
+# -------------------------------------------------------------
+# 네이버 로그인 코드
+# accounts/views.py
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def naver_login(request):
+    code = request.data.get('code')
+    state = request.data.get('state')
+    
+    CLIENT_ID = "tPDkW3PnoZVt6H0P8LTM"
+    CLIENT_SECRET = "4S5d5jnup6"
+
+    # 1. 액세스 토큰 요청
+    token_url = f"https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&code={code}&state={state}"
+    token_res = requests.get(token_url)
+    token_json = token_res.json()
+    
+    access_token = token_json.get('access_token')
+
+    # 액세스 토큰이 없으면 여기서 중단하여 UnboundLocalError 방지
+    if not access_token:
+        print(f"네이버 토큰 발급 실패: {token_json}")
+        return Response({'error': '네이버 토큰을 가져오지 못했습니다.'}, status=400)
+
+    # 2. 유저 정보 요청 (이 부분이 실행되어야 user_res가 정의됩니다)
+    user_res = requests.get(
+        "https://openapi.naver.com/v1/nid/me",
+        headers={"Authorization": f"Bearer {access_token}"}
+    )
+    
+    # 여기서 user_res를 사용하므로 위에서 반드시 정의되어야 함
+    user_response_data = user_res.json().get('response') 
+
+    if not user_response_data:
+        return Response({'error': '네이버 유저 정보를 가져오지 못했습니다.'}, status=400)
+
+    # 3. 유저 생성 및 로그인 처리
+    # (이후 로직은 이전과 동일하게 닉네임 추출 및 Response 반환)
+    naver_nickname = user_response_data.get('nickname', 'NaverUser')
+    user, created = User.objects.get_or_create(
+        username=f"naver_{user_response_data.get('id')[:10]}",
+        defaults={
+            'first_name': naver_nickname,
+            'email': user_response_data.get('email', ''),
+            'password': get_random_string(32),
+            'age': 20,
+            'gender': 'M'
+        }
+    )
+
+    if not created:
+        user.first_name = naver_nickname
+        user.save()
+
+    token, _ = Token.objects.get_or_create(user=user)
+
+    return Response({
+        'token': token.key,
+        'username': user.username,
+        'nickname': f"naver_{user.first_name}",
+    })
+# -------------------------------------------------------------
