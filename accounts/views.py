@@ -19,7 +19,9 @@ from django.views.decorators.http import (
 )
 from .serializers import SignupSerializer,UserProfileSerializer
 from django.utils.crypto import get_random_string
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 User = get_user_model()
 
@@ -145,7 +147,7 @@ def kakao_login(request):
     if not code:
         return Response({'error': '코드가 없습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    REST_API_KEY = "8bfc2c0375eb0ec262342e4f996b7e4d"
+    REST_API_KEY = os.getenv("KAKAO_REST_API_KEY")
     REDIRECT_URI = "http://localhost:5173/login/kakao"
 
     token_res = requests.post(
@@ -203,8 +205,8 @@ def naver_login(request):
     code = request.data.get('code')
     state = request.data.get('state')
     
-    CLIENT_ID = "tPDkW3PnoZVt6H0P8LTM"
-    CLIENT_SECRET = "4S5d5jnup6"
+    CLIENT_ID = os.getenv("NAVER_CLIENT_ID")
+    CLIENT_SECRET = os.getenv("NAVER_SECRET_KEY")
 
     token_url = f"https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&code={code}&state={state}"
     token_res = requests.get(token_url)
@@ -250,12 +252,14 @@ def naver_login(request):
 # -------------------------------------------------------------
 
 # ------구글 로그인---------------------------------------------
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def google_callback(request):
     code = request.data.get('code')
-    client_id = "34177585488-sbk57388v5hfnjprm894sfl5ektmjpn9.apps.googleusercontent.com"
-    client_secret = "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" # 🚩 본인의 Client Secret 입력
+    client_id = os.getenv("GOOGLE_CLIENT_ID")
+    client_secret = os.getenv("GOOGLE_CLIENT_KEY") # 🚩 본인의 Client Secret 입력
     redirect_uri = "http://localhost:5173/login/google"
 
     # 1. 구글 엑세스 토큰 요청
