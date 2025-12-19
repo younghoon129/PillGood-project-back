@@ -19,6 +19,12 @@ class Category(models.Model):
 # --------------------
 class Substance(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="영양소 이름") 
+    
+    # ▼▼▼ [수정] 상세 설명 필드 3개 추가 ▼▼▼
+    efficacy = models.TextField(default="데이터 설명", verbose_name="효능 및 효과")
+    side_effects = models.TextField(default="데이터 설명", verbose_name="부작용 및 주의사항")
+    recommended_intake = models.TextField(default="데이터 설명", verbose_name="권장 섭취량")
+    # ▲▲▲ 추가 완료 ▲▲▲
 
     def __str__(self):
         return self.name
