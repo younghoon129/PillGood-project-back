@@ -53,6 +53,8 @@ class User(AbstractUser):
         'self', symmetrical=False, related_name='followers'
     )
 
+    email = models.EmailField(unique=True)
+
     def __str__(self):
         return self.username
 

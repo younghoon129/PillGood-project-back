@@ -10,13 +10,14 @@ from rest_framework import status
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.views.decorators.http import (
     require_POST,
 )
-from .serializers import SignupSerializer
+from .serializers import SignupSerializer,UserProfileSerializer
 from django.utils.crypto import get_random_string
 
 
@@ -72,6 +73,46 @@ def profile(request, username):
     }
     return render(request, 'accounts/profile.html', context)
 
+# -------------------------------------------------------------------
+# 프로젝트 진행 중인 , 마이페이지 기능 구현 코드
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def user_profile(request):
+    user = request.user
+    
+    if request.method == 'GET':
+        serializer = UserProfileSerializer(user)
+        data = serializer.data
+        
+        # 1. 닉네임은 접두사 없이 순수하게 first_name(또는 username)만 보냄
+        data['nickname'] = user.first_name if user.first_name else user.username
+        
+        # 2. 로그인 제공자(provider) 정보를 별도로 추가
+        if user.username.startswith("kakao_"): data['provider'] = 'kakao'
+        elif user.username.startswith("naver_"): data['provider'] = 'naver'
+        else: data['provider'] = 'local'
+        
+        return Response(data)
+    
+    elif request.method == 'PUT':
+        # 3. 수정 시에는 받은 닉네임을 그대로 first_name에 저장
+        user.first_name = request.data.get('nickname', user.first_name)
+        user.email = request.data.get('email', user.email)
+        user.age = request.data.get('age', user.age)
+        user.gender = request.data.get('gender', user.gender)
+        
+        # 카테고리(장르) 저장 로직 (시리얼라이저 활용 권장)
+        if 'interested_genres' in request.data:
+            user.interested_genres.set(request.data.get('interested_genres'))
+            
+        user.save()
+        
+        return Response({
+            'message': '수정 완료',
+            'nickname': user.first_name
+        })
+# -------------------------------------------------------------------
+
 @require_POST
 @login_required
 def follow(request, user_pk):
@@ -100,17 +141,13 @@ def follow(request, user_pk):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def kakao_login(request):
-    # 1. 프론트엔드에서 보낸 인가 코드 받기
     code = request.data.get('code')
     if not code:
         return Response({'error': '코드가 없습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # 카카오 설정 정보 (본인의 키로 교체 필요)
-    # 실제 프로젝트에서는 settings.py나 환경변수로 관리하는 것이 좋습니다.
     REST_API_KEY = "8bfc2c0375eb0ec262342e4f996b7e4d"
     REDIRECT_URI = "http://localhost:5173/login/kakao"
 
-    # 2. 인가 코드로 카카오 'Access Token' 요청하기
     token_res = requests.post(
         "https://kauth.kakao.com/oauth/token",
         data={
@@ -126,36 +163,33 @@ def kakao_login(request):
     if not access_token:
         return Response({'error': '카카오 토큰 발급 실패'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # 3. Access Token으로 카카오 유저 정보 가져오기
     user_info_res = requests.get(
         "https://kapi.kakao.com/v2/user/me",
         headers={"Authorization": f"Bearer {access_token}"}
     )
     user_json = user_info_res.json()
     kakao_account = user_json.get("kakao_account")
-    nickname = kakao_account.get("profile").get("nickname") # 사용자의 실제 닉네임
+    nickname = kakao_account.get("profile").get("nickname")
 
-    # 4. 유저 저장 또는 가져오기
+    # [수정] get_or_create의 defaults만 사용하여 최초 가입 시에만 이름 저장
     user, created = User.objects.get_or_create(
         username=f"kakao_{user_json.get('id')}",
         defaults={
             'email': kakao_account.get("email", ""),
-            'first_name': nickname,  # 닉네임을 first_name 필드에 저장
+            'first_name': nickname,
             'password': get_random_string(32),
         }
     )
 
-    if not created and user.first_name != nickname:
-        user.first_name = nickname
-        user.save()
+    # [수정] if not created... user.save() 로직을 삭제하여 기존 유저 정보 보호
 
-    # 5. 우리 프로젝트 전용 토큰(DRF Token) 발급
     token, _ = Token.objects.get_or_create(user=user)
 
     return Response({
         'token': token.key,
         'username': user.username,
-        'nickname': f'kakao_{user.first_name}',
+        'nickname': user.first_name, # [수정] 접두사 제거하고 순수 이름만 전송
+        'provider': 'kakao',         # [추가] 프론트 배지 표시용
         'message': '카카오 로그인 성공'
     })
 
@@ -172,33 +206,26 @@ def naver_login(request):
     CLIENT_ID = "tPDkW3PnoZVt6H0P8LTM"
     CLIENT_SECRET = "4S5d5jnup6"
 
-    # 1. 액세스 토큰 요청
     token_url = f"https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&code={code}&state={state}"
     token_res = requests.get(token_url)
     token_json = token_res.json()
-    
     access_token = token_json.get('access_token')
 
-    # 액세스 토큰이 없으면 여기서 중단하여 UnboundLocalError 방지
     if not access_token:
-        print(f"네이버 토큰 발급 실패: {token_json}")
-        return Response({'error': '네이버 토큰을 가져오지 못했습니다.'}, status=400)
+        return Response({'error': '네이버 토큰 실패'}, status=400)
 
-    # 2. 유저 정보 요청 (이 부분이 실행되어야 user_res가 정의됩니다)
     user_res = requests.get(
         "https://openapi.naver.com/v1/nid/me",
         headers={"Authorization": f"Bearer {access_token}"}
     )
-    
-    # 여기서 user_res를 사용하므로 위에서 반드시 정의되어야 함
     user_response_data = user_res.json().get('response') 
 
     if not user_response_data:
-        return Response({'error': '네이버 유저 정보를 가져오지 못했습니다.'}, status=400)
+        return Response({'error': '유저 정보 실패'}, status=400)
 
-    # 3. 유저 생성 및 로그인 처리
-    # (이후 로직은 이전과 동일하게 닉네임 추출 및 Response 반환)
     naver_nickname = user_response_data.get('nickname', 'NaverUser')
+    
+    # [수정] 최초 가입 시에만 정보를 저장하도록 defaults 설정
     user, created = User.objects.get_or_create(
         username=f"naver_{user_response_data.get('id')[:10]}",
         defaults={
@@ -210,15 +237,14 @@ def naver_login(request):
         }
     )
 
-    if not created:
-        user.first_name = naver_nickname
-        user.save()
+    # [수정] 기존 유저 덮어쓰기 로직 삭제
 
     token, _ = Token.objects.get_or_create(user=user)
 
     return Response({
         'token': token.key,
         'username': user.username,
-        'nickname': f"naver_{user.first_name}",
+        'nickname': user.first_name, # [수정] 접두사 제거
+        'provider': 'naver',         # [추가] 프론트 배지 표시용
     })
 # -------------------------------------------------------------

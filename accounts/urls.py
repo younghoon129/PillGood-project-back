@@ -6,8 +6,9 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
     path('signup/', views.signup, name='signup'),
-    path('profile/<username>/', views.profile, name='profile'),
+    # path('profile/<username>/', views.profile, name='profile'),
     path('<int:user_pk>/follow/', views.follow, name='follow'),
     path('kakao/login/', views.kakao_login, name='kakao_login'),
     path('naver/login/', views.naver_login, name='naver_login'),
+    path('profile/' , views.user_profile, name='user_profile')
 ]
