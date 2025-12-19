@@ -16,7 +16,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class SubstanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Substance
-        fields = ('id', 'name')
+        fields = '__all__'
 
 class AllergenSerializer(serializers.ModelSerializer):
     class Meta:
@@ -107,3 +107,12 @@ class ThreadSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.likes.filter(pk=request.user.pk).exists()
         return False
+    
+# 3. 카테고리 클릭 시 -> 포함된 성분 리스트를 보여주기 위한 시리얼라이저
+class CategoryWithSubstancesSerializer(serializers.ModelSerializer):
+    # 위에서 정의한 SubstanceSerializer를 가져다 씁니다.
+    substances = SubstanceSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'substances']

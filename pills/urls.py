@@ -46,4 +46,15 @@ urlpatterns = [
     ),
     path('categories/', views.category_list, name='category_list'),
     # path("filter-category/", views.filter_category, name="filter_category"),
+    # [추가] 맞춤 추천 메인 (모든 카테고리 조회)
+    path('categories/', views.category_list),
+    
+    # [추가] 특정 카테고리의 성분 리스트 조회
+    path('categories/<int:category_id>/', views.category_detail),
+    
+    # [추가] 성분 상세 정보 조회
+    path('substances/<int:substance_id>/', views.substance_detail),
+    
+    # [추가] 성분별 영양제 리스트 (필터링 포함)
+    path('substances/<int:substance_id>/pills/', views.substance_pills),
 ]

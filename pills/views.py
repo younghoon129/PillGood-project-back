@@ -13,13 +13,15 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 # category model 가져와야됨
 from accounts.models import Category
-from .models import Pill, Thread, Comment
+from .models import Pill, Thread, Comment, Substance
 from .forms import ThreadForm, CommentForm
 from .serializers import (
     PillListSerializer, 
     PillDetailSerializer, 
     ThreadSerializer, 
-    CommentSerializer
+    CommentSerializer,
+    CategoryWithSubstancesSerializer,
+    SubstanceSerializer
 )
 from django.db.models import Count
 from rest_framework.permissions import AllowAny
@@ -296,4 +298,60 @@ def thread_list(request, pill_pk):
     
     # 5. JSON 응답
     # 페이징 처리를 사용했다면 paginator의 응답 함수를 사용합니다.
+    return paginator.get_paginated_response(serializer.data)
+
+
+# ==========================================
+# ▼▼▼ 맞춤 추천 및 상세 검색 기능 추가 ▼▼▼
+# ==========================================
+
+
+# 2. 특정 카테고리 클릭 시 -> 성분 리스트 조회
+@api_view(['GET'])
+def category_detail(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    serializer = CategoryWithSubstancesSerializer(category)
+    return Response(serializer.data)
+
+# 3. 성분 상세 정보 조회 (효능, 부작용, 권장량 등)
+@api_view(['GET'])
+def substance_detail(request, substance_id):
+    substance = get_object_or_404(Substance, pk=substance_id)
+    serializer = SubstanceSerializer(substance)
+    return Response(serializer.data)
+
+# 4. ★ 핵심: 특정 성분이 포함된 영양제 리스트 (필터 + 페이징)
+@api_view(['GET'])
+def substance_pills(request, substance_id):
+    substance = get_object_or_404(Substance, pk=substance_id)
+    
+    # [1] 기본 검색: 해당 성분이 포함된 영양제 찾기
+    # models.py 구조: Pill <-> Nutrient <-> Substance
+    # Nutrient 모델의 'substance' 필드를 통해 역참조하여 Pill을 찾습니다.
+    pills = Pill.objects.filter(nutrient_details__substance=substance).distinct()
+
+    # [2] 카테고리 필터링 (교집합)
+    categories_param = request.GET.get('category')
+    if categories_param:
+        # "간 건강,눈 건강" -> ["간 건강", "눈 건강"] 리스트로 변환
+        category_list = categories_param.split(',')
+        # __in 연산자를 써서 리스트에 포함된 것들을 모두 찾음
+        pills = pills.filter(category__name__in=category_list)
+
+    # [3] 제형(모양) 필터링 (포함 검색)
+    shapes_param = request.GET.get('shapes')
+    if shapes_param:
+        shape_list = shapes_param.split(',')
+        q_objects = Q()
+        for shape in shape_list:
+            # 예: '정(알약)' 검색 시 '정'이나 '알약' 글자가 포함되면 매칭
+            q_objects |= Q(PRDT_SHAP_CD_NM__icontains=shape)
+        pills = pills.filter(q_objects)
+
+    # [4] 페이지네이션 (20개씩 끊어서 보내기)
+    paginator = PageNumberPagination()
+    paginator.page_size = 20
+    result_page = paginator.paginate_queryset(pills, request)
+    
+    serializer = PillListSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
