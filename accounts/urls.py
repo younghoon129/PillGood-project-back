@@ -9,4 +9,5 @@ urlpatterns = [
     path('profile/<username>/', views.profile, name='profile'),
     path('<int:user_pk>/follow/', views.follow, name='follow'),
     path('kakao/login/', views.kakao_login, name='kakao_login'),
+    path('naver/login/', views.naver_login, name='naver_login'),
 ]
