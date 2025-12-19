@@ -248,3 +248,67 @@ def naver_login(request):
         'provider': 'naver',         # [추가] 프론트 배지 표시용
     })
 # -------------------------------------------------------------
+
+# ------구글 로그인---------------------------------------------
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def google_callback(request):
+    code = request.data.get('code')
+    client_id = "34177585488-sbk57388v5hfnjprm894sfl5ektmjpn9.apps.googleusercontent.com"
+    client_secret = "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" # 🚩 본인의 Client Secret 입력
+    redirect_uri = "http://localhost:5173/login/google"
+
+    # 1. 구글 엑세스 토큰 요청
+    token_res = requests.post("https://oauth2.googleapis.com/token", data={
+        'code': code,
+        'client_id': client_id,
+        'client_secret': client_secret,
+        'redirect_uri': redirect_uri,
+        'grant_type': 'authorization_code',
+    })
+    token_data = token_res.json()
+    google_access_token = token_data.get('access_token')
+
+    if not google_access_token:
+        return Response({'error': '구글 토큰 발급 실패', 'detail': token_data}, status=400)
+
+    # 2. 구글 유저 정보 가져오기 (이메일 확인용)
+    user_info = requests.get(
+        "https://www.googleapis.com/oauth2/v2/userinfo",
+        headers={'Authorization': f'Bearer {google_access_token}'}
+    ).json()
+    email = user_info.get('email')
+
+    # 🚩 [핵심] 이미 로그인된 사용자(카카오/네이버 등)가 연동을 시도한 경우
+    if request.user.is_authenticated:
+        token, _ = Token.objects.get_or_create(user=request.user)
+        return Response({
+            'status': 'linked',
+            'token': token.key,
+            'nickname': request.user.first_name,
+            'id': request.user.id,
+            'google_access_token': google_access_token
+        }, status=200)
+
+    # 3. 로그인되지 않은 상태에서 구글로 시작하는 경우 (기존 로직)
+    username = f"google_{email.split('@')[0]}"
+    user, created = User.objects.get_or_create(
+        username=username,
+        defaults={
+            'email': email,
+            'first_name': user_info.get('name', 'GoogleUser'),
+            'password': get_random_string(32)
+        }
+    )
+    
+    django_token, _ = Token.objects.get_or_create(user=user)
+
+    return Response({
+        'status': 'login',
+        'token': django_token.key,
+        'nickname': user.first_name,
+        'username': user.username,
+        'id': user.id,
+        'google_access_token': google_access_token
+    }, status=200)
+# --------------------------------------------------------------------

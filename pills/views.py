@@ -1,14 +1,21 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from rest_framework.authentication import TokenAuthentication
 from django.views.decorators.http import (
     require_http_methods,
     require_safe,
     require_POST,
 )
-from rest_framework.decorators import api_view, permission_classes
+import json
+import requests
+from datetime import datetime, timedelta
+from rest_framework import status
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 # category model 가져와야됨
@@ -355,3 +362,87 @@ def substance_pills(request, substance_id):
     
     serializer = PillListSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
+
+
+
+# 카카오 캘린더 로직 ------------------------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def register_kakao_calendar(request):
+    pill_name = request.data.get('pillName')
+    selected_date = request.data.get('date')  # 사용자가 선택한 날짜 (예: "2025-12-25")
+    intake_time = request.data.get('time')    # 사용자가 선택한 시간 (예: "13:00")
+    description = request.data.get('description', '')
+    frequency = request.data.get('frequency')
+    
+    kakao_access_token = request.headers.get('Kakao-Access-Token')
+
+    # 1. 시간 형식 가공 (사용자가 선택한 날짜와 시간을 합침)
+    try:
+        # 카카오 규격: YYYY-MM-DDTHH:MM:SSZ
+        start_at = f"{selected_date}T{intake_time}:00Z"
+        start_dt = datetime.strptime(start_at, "%Y-%m-%dT%H:%M:%SZ")
+        end_dt = start_dt + timedelta(minutes=30)
+        end_at = end_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        return Response({"error": "날짜 또는 시간 형식이 잘못되었습니다."}, status=400)
+
+    # 2. 일정 데이터 구성
+    event_payload = {
+        "title": f"💊 {pill_name} 복용",
+        "description": description,
+        "start_at": start_at,
+        "end_at": end_at,
+        "time_zone": "Asia/Seoul",
+        # frequency가 'DAILY'일 때만 rrule을 추가하고, 아니면 추가하지 않음 (일회성)
+    }
+    
+    if frequency == 'DAILY':
+        event_payload["rrule"] = "FREQ=DAILY;INTERVAL=1"
+
+    # 3. 카카오 API 호출
+    headers = {
+        "Authorization": f"Bearer {kakao_access_token}",
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    data = {"event": json.dumps(event_payload)}
+
+    response = requests.post("https://kapi.kakao.com/v2/api/talk/calendar/create/event", headers=headers, data=data)
+
+    if response.status_code == 200:
+        return Response({"message": "등록 성공"}, status=200)
+    return Response(response.json(), status=response.status_code)
+# -----------------------------------------------------------
+
+# --------구글 캘린더------------------------------------------
+@csrf_exempt
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def register_google_calendar(request):
+    pill_name = request.data.get('pillName')
+    selected_date = request.data.get('date')
+    intake_time = request.data.get('time')
+    google_token = request.headers.get('Google-Access-Token')
+
+    # RFC3339 시간 포맷 설정
+    start_time = f"{selected_date}T{intake_time}:00+09:00"
+    end_dt = datetime.strptime(f"{selected_date}T{intake_time}", "%Y-%m-%dT%H:%M") + timedelta(minutes=30)
+    end_time = end_dt.strftime("%Y-%m-%dT%H:%M:%S+09:00")
+
+    payload = {
+        'summary': f'💊 {pill_name} 복용',
+        'start': {'dateTime': start_time, 'timeZone': 'Asia/Seoul'},
+        'end': {'dateTime': end_time, 'timeZone': 'Asia/Seoul'},
+    }
+
+    res = requests.post(
+        "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+        json=payload,
+        headers={"Authorization": f"Bearer {google_token}"}
+    )
+
+    if res.status_code in [200, 201]:
+        return Response({"message": "등록 성공"}, status=200)
+    return Response(res.json(), status=res.status_code)
+# -----------------------------------------------------------------

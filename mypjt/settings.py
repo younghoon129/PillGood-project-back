@@ -29,6 +29,18 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+from corsheaders.defaults import default_headers
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "google-access-token",  # 🚩 우리가 만든 커스텀 헤더를 허용 목록에 추가합니다.
+]
+CORS_ALLOW_ALL_ORIGINS = True
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
 
 # Application definition
 
@@ -142,7 +154,7 @@ AUTH_USER_MODEL = 'accounts.User'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ],    
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
