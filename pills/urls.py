@@ -6,8 +6,7 @@ app_name = "pills"
 urlpatterns = [
     # 구글 캘린더
     path('google-calendar/', views.register_google_calendar, name='google_calendar'),
-    # 카카오 캘린더 
-    path('kakao-calendar/', views.register_kakao_calendar, name='kakao-calendar'),
+    
     path("", views.index, name="index"),
     path("<int:pill_pk>/", views.detail, name="detail"),
 

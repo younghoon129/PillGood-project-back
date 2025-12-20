@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from pills.models import Category
+from .models import Allergy
 
 User = get_user_model()
 
@@ -23,7 +24,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
     interested_genres_names = serializers.StringRelatedField(
         source='interested_genres', many=True, read_only=True
     )
-    
+
+    allergies = serializers.PrimaryKeyRelatedField(many=True, queryset=Allergy.objects.all(), required=False)
+    allergies_names = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='name',
+        source='allergies'
+    )
     followers_count = serializers.IntegerField(source='followers.count', read_only=True)
     followings_count = serializers.IntegerField(source='followings.count', read_only=True)
 
@@ -33,9 +41,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'id', 'username', 'email', 'gender', 'age', 
             'weekly_avg_eating_time', 'annual_eating_amount', 
             'profile_img', 'interested_genres', 'interested_genres_names',
-            'followers_count', 'followings_count',
+            'followers_count', 'followings_count', 'allergies', 'allergies_names'
         )
         read_only_fields = ('followings',) # 팔로잉은 별도 API로 제어 권장
+
+# ---------------------------
+# 간단한 알러지 전용 시리얼라이저
+# ---------------------------
+class AllergySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Allergy
+        fields = '__all__'
 
 
 

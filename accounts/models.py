@@ -2,8 +2,21 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from pills.models import Category
 
+class Allergy(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
 
 class User(AbstractUser):
+
+    # 알러지 정보
+    allergies = models.ManyToManyField(
+        Allergy,
+        blank=True,
+        related_name="users",
+    )
+
     # 성별
     GENDER_CHOICES = (
         ('M', '남성'),

@@ -1,5 +1,8 @@
 from django.http.response import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authentication import TokenAuthentication
 import requests
+from .models import Allergy
 from django.conf import settings
 from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
@@ -8,7 +11,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from django.contrib.auth.decorators import login_required
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes,authentication_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
@@ -17,7 +20,7 @@ from rest_framework.authtoken.models import Token
 from django.views.decorators.http import (
     require_POST,
 )
-from .serializers import SignupSerializer,UserProfileSerializer
+from .serializers import SignupSerializer,UserProfileSerializer,AllergySerializer
 from django.utils.crypto import get_random_string
 import os
 from dotenv import load_dotenv
@@ -65,15 +68,20 @@ def signup(request):
             'message': '회원가입이 완료되었습니다.',
             'nickname': user.first_name if user.first_name else user.username
         }, status=status.HTTP_201_CREATED)
+    
+@csrf_exempt
+@api_view(['DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def user_delete(request):
+    user = request.user
+    user.delete()
+    return Response(
+        {"message": "회원 탈퇴가 완료되었습니다. 그동안 이용해주셔서 감사합니다."}, 
+        status=status.HTTP_204_NO_CONTENT
+    )
 
 
-def profile(request, username):
-    User = get_user_model()
-    person = User.objects.get(username=username)
-    context = {
-        'person': person,
-    }
-    return render(request, 'accounts/profile.html', context)
 
 # -------------------------------------------------------------------
 # 프로젝트 진행 중인 , 마이페이지 기능 구현 코드
@@ -106,14 +114,30 @@ def user_profile(request):
         # 카테고리(장르) 저장 로직 (시리얼라이저 활용 권장)
         if 'interested_genres' in request.data:
             user.interested_genres.set(request.data.get('interested_genres'))
+
+        if 'allergies' in request.data:
+            user.allergies.set(request.data.get('allergies'))
             
         user.save()
         
         return Response({
             'message': '수정 완료',
-            'nickname': user.first_name
+            'nickname': user.first_name,
+            'allergies': list(user.allergies.values_list('id', flat=True))
         })
 # -------------------------------------------------------------------
+@api_view(['GET'])
+@permission_classes([AllowAny]) # 누구나 목록은 볼 수 있게 설정
+def allergy_list(request):
+    """
+    DB에 등록된 모든 알러지 성분 목록을 반환합니다.
+    """
+    allergies = Allergy.objects.all()
+    serializer = AllergySerializer(allergies, many=True)
+    return Response(serializer.data)
+# --------------------------------------------------------------------
+
+
 
 @require_POST
 @login_required
@@ -316,3 +340,10 @@ def google_callback(request):
         'google_access_token': google_access_token
     }, status=200)
 # --------------------------------------------------------------------
+# def profile(request, username):
+#     User = get_user_model()
+#     person = User.objects.get(username=username)
+#     context = {
+#         'person': person,
+#     }
+#     return render(request, 'accounts/profile.html', context)
