@@ -20,7 +20,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 # category model 가져와야됨
 from accounts.models import Category
-from .models import Pill, Thread, Comment, Substance
+from .models import Pill, Thread, Comment, Substance, UserPill, CustomPill
 from .forms import ThreadForm, CommentForm
 from .serializers import (
     PillListSerializer, 
@@ -28,7 +28,9 @@ from .serializers import (
     ThreadSerializer, 
     CommentSerializer,
     CategoryWithSubstancesSerializer,
-    SubstanceSerializer
+    SubstanceSerializer,
+    UserPillSerializer,
+    CustomPillSerializer
 )
 from django.db.models import Count
 from rest_framework.permissions import AllowAny
@@ -186,6 +188,71 @@ def thread_delete(request, pill_pk, thread_pk):
     thread.delete()
     return Response({"detail": "후기가 삭제되었습니다."}, status=204)
 # --------------------------------------------------------------------------
+
+# --------사용자 영양제함 ----------------------------------------------------
+@api_view(['POST', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def toggle_pill(request, pill_pk):
+    pill = get_object_or_404(Pill, pk=pill_pk)
+    user = request.user
+
+    if request.method == 'POST':
+        # 영양제함에 추가
+        user_pill, created = UserPill.objects.get_or_create(user=user, pill=pill)
+        if created:
+            return Response({'message': '영양제함에 추가되었습니다.'}, status=201)
+        return Response({'message': '이미 등록된 영양제입니다.'}, status=400)
+
+    elif request.method == 'DELETE':
+        # 영양제함에서 삭제
+        user_pill = UserPill.objects.filter(user=user, pill=pill)
+        if user_pill.exists():
+            user_pill.delete()
+            return Response({'message': '영양제함에서 삭제되었습니다.'}, status=204)
+        return Response({'message': '등록되지 않은 영양제입니다.'}, status=400)
+# ---------------------------------------------------------------------------
+# ---------영양제함 목록 조회 api ---------------------------------------------
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def my_pills(request):
+    pills = UserPill.objects.filter(user=request.user).order_by('-created_at')
+    serializer = UserPillSerializer(pills, many=True)
+    return Response(serializer.data)
+# ---------------------------------------------------------------------------
+# --------- 영양제가 사용자의 영양제함에 들어있는지 확인하는 함수----------------
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_pill_enrollment(request, pill_pk):
+    # 현재 로그인한 유저가 이 영양제를 가지고 있는지 확인 (True/False)
+    is_enrolled = UserPill.objects.filter(user=request.user, pill_id=pill_pk).exists()
+    return Response({'is_enrolled': is_enrolled})
+# ---------------------------------------------------------------------------
+# --------------- 사용자 커스텀 영양제 ----------------------------------------
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def custom_pill_list(request):
+    if request.method == 'GET':
+        pills = CustomPill.objects.filter(user=request.user)
+        serializer = CustomPillSerializer(pills, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = CustomPillSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=201)
+# ---------------------------------------------------------------------------
+# ------------ 커스텀 영양제 삭제 ---------------------------------------------
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def custom_pill_detail(request, pk):
+    # 본인이 작성한 커스텀 영양제만 가져옵니다.
+    custom_pill = get_object_or_404(CustomPill, pk=pk, user=request.user)
+    
+    if request.method == 'DELETE':
+        custom_pill.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+# ----------------------------------------------------------------------------
 
 # @login_required
 # @require_http_methods(["GET", "POST"])

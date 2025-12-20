@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Pill, Category, Substance, Nutrient, Allergen, Thread, Comment
+from .models import Pill, Category, Substance, Nutrient, Allergen, Thread, Comment, UserPill, CustomPill
 from accounts.serializers import UserTinySerializer # 위에서 만든 유저 시리얼라이저 import
 
 User = get_user_model()
@@ -66,6 +66,18 @@ class PillDetailSerializer(serializers.ModelSerializer):
         model = Pill
         fields = '__all__' # 모든 필드 + 위에서 정의한 Nested 필드 포함
 
+# ----사용자 커스텀 영양제 ----------------------------------------
+class CustomPillSerializer(serializers.ModelSerializer):
+    # user 정보는 프론트엔드에서 직접 입력받지 않고, 
+    # 토큰을 통해 백엔드에서 자동으로 할당하므로 읽기 전용으로 설정합니다.
+    user = serializers.ReadOnlyField(source='user.username')
+
+    class Meta:
+        model = CustomPill
+        # 사용자가 입력할 필드와 서버에서 관리할 필드를 정의합니다.
+        fields = ('id', 'user', 'name', 'brand', 'memo', 'created_at')
+# ----------------------------------------------------------------
+
 
 # ----------------------------------------------------------------
 # [3] 커뮤니티 (Thread, Comment)
@@ -125,3 +137,16 @@ class CategoryWithSubstancesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'substances']
+
+class PillSimpleSerializer(serializers.ModelSerializer):
+    """영양제함 목록에 보여줄 최소한의 정보"""
+    class Meta:
+        model = Pill
+        fields = ('id', 'PRDLST_NM', 'cover', 'BSSH_NM')
+
+class UserPillSerializer(serializers.ModelSerializer):
+    pill = PillSimpleSerializer(read_only=True) # 상세 정보 포함
+
+    class Meta:
+        model = UserPill
+        fields = ('id', 'pill', 'created_at')

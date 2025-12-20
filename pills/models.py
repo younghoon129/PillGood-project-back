@@ -135,3 +135,42 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
+    
+
+# 사용자가 등록하는 영양제함-----------------------------------
+class UserPill(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='my_pills'
+    )
+    pill = models.ForeignKey(
+        Pill, 
+        on_delete=models.CASCADE,
+        related_name='enrolled_users'
+    )
+    created_at = models.DateTimeField(auto_now_add=True) # 등록일
+
+    class Meta:
+        # 한 사용자가 같은 영양제를 중복해서 등록하지 못하도록 설정
+        unique_together = ('user', 'pill')
+
+    def __str__(self):
+        return f"{self.user.username}의 영양제: {self.pill.PRDLST_NM}"
+# -------------------------------------------------------------------
+
+# ----------사용자가 직접 추가하는 영양제 ------------------------------
+class CustomPill(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='custom_pills'
+    )
+    name = models.CharField(max_length=100)    # 제품명
+    brand = models.CharField(max_length=100, blank=True) # 제조사
+    memo = models.TextField(blank=True)        # 메모 (복용법 등)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username}의 커스텀 영양제: {self.name}"
+# --------------------------------------------------------------------
