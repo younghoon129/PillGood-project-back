@@ -169,6 +169,7 @@ class CustomPill(models.Model):
     name = models.CharField(max_length=100)    # 제품명
     brand = models.CharField(max_length=100, blank=True) # 제조사
     memo = models.TextField(blank=True)        # 메모 (복용법 등)
+    ingredients = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

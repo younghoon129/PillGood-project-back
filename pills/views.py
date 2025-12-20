@@ -20,7 +20,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 # category model 가져와야됨
 from accounts.models import Category
-from .models import Pill, Thread, Comment, Substance, UserPill, CustomPill
+from .models import Pill, Thread, Comment, Substance, UserPill, CustomPill,Nutrient
 from .forms import ThreadForm, CommentForm
 from .serializers import (
     PillListSerializer, 
@@ -252,6 +252,13 @@ def custom_pill_detail(request, pk):
     if request.method == 'DELETE':
         custom_pill.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+# ----------------------------------------------------------------------------
+# -------------영양제 함량 가져오기 (중복 섭취 기능) ----------------------------
+@api_view(['GET'])
+def all_ingredients_list(request):
+    # 모든 성분명(substance_name)을 가져와 중복 제거 후 가나다순 정렬
+    ingredients = Nutrient.objects.values_list('substance_name', flat=True).distinct().order_by('substance_name')
+    return Response(list(ingredients))
 # ----------------------------------------------------------------------------
 
 # @login_required

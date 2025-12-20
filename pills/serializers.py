@@ -75,7 +75,7 @@ class CustomPillSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomPill
         # 사용자가 입력할 필드와 서버에서 관리할 필드를 정의합니다.
-        fields = ('id', 'user', 'name', 'brand', 'memo', 'created_at')
+        fields = ('id', 'user', 'name', 'brand', 'memo', 'ingredients', 'created_at')
 # ----------------------------------------------------------------
 
 
