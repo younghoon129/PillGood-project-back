@@ -33,6 +33,8 @@ from .serializers import (
 from django.db.models import Count
 from rest_framework.permissions import AllowAny
 
+from .utils import get_purchase_link
+from rest_framework.views import APIView
 
 # Index 페이지
 # 장르별 필터링
@@ -40,7 +42,7 @@ from rest_framework.permissions import AllowAny
 @api_view(['GET'])
 @permission_classes([AllowAny]) # 로그인 없이도 누구나 볼 수 있게 설정
 def index(request):
-    pills = Pill.objects.all().order_by('-pk')
+    pills = Pill.objects.exclude(price=-1).order_by('-pk')
     search_type = request.GET.get('search_type') # 예: 'name', 'company', 'ingredient', 'shape'
     keyword = request.GET.get('keyword') # 예: '비타민', '종근당'
 
@@ -115,7 +117,39 @@ def index(request):
 @permission_classes([AllowAny])
 def detail(request, pill_pk):
     pill = get_object_or_404(Pill, pk=pill_pk)
-    # 상세 전용 시리얼라이저 사용 (모든 정보 포함)
+
+    print(f"\n📢 [DEBUG] ID: {pill.id} / 제품명: {pill.PRDLST_NM}")
+    
+    # 🔥 [수정 포인트]
+    # 1. '자미오리' 제품이거나 (잘못된 링크 수정용)
+    # 2. URL이 없거나
+    # 3. 가격이 없거나 실패(-1)했던 경우
+    # -> 무조건 검색 로직 실행!
+    force_update = (pill.PRDLST_NM == '자미오리') # 자미오리만 강제 검색
+    
+    if force_update or not pill.purchase_url or pill.price == -1 or pill.price is None or pill.price == 0:
+        print("🚀 네이버 검색 API 호출 시작... (검증 로직 적용됨)")
+        
+        # utils.py의 개선된 함수 호출 (기업명 검증 포함)
+        link_data = get_purchase_link(pill.PRDLST_NM, pill.BSSH_NM) 
+        
+        if link_data:
+            print(f"✅ 검색 성공! 최저가: {link_data['price']}원")
+            print(f"   🔗 링크: {link_data['link']}")
+            pill.purchase_url = link_data['link']
+            pill.price = link_data['price']
+            pill.mall_name = link_data['mall']
+        else:
+            print("❌ 검색 결과 없음 또는 제조사 불일치 (제습기 차단됨 🛡️)")
+            pill.price = -1
+            pill.purchase_url = ""
+            
+        pill.save()
+        print("💾 DB 업데이트 완료")
+    
+    else:
+        print("⚡ 이미 데이터가 있어서 생략함")
+
     serializer = PillDetailSerializer(pill)
     return Response(serializer.data)
 
@@ -378,7 +412,7 @@ def substance_pills(request, substance_id):
     # [1] 기본 검색: 해당 성분이 포함된 영양제 찾기
     # models.py 구조: Pill <-> Nutrient <-> Substance
     # Nutrient 모델의 'substance' 필드를 통해 역참조하여 Pill을 찾습니다.
-    pills = Pill.objects.filter(nutrient_details__substance=substance).distinct()
+    pills = Pill.objects.filter(nutrient_details__substance=substance).exclude(price=-1).distinct()
 
     # [2] 카테고리 필터링 (교집합)
     categories_param = request.GET.get('category')
@@ -442,3 +476,4 @@ def register_google_calendar(request):
         return Response({"message": "등록 성공"}, status=200)
     return Response(res.json(), status=res.status_code)
 # -----------------------------------------------------------------
+
