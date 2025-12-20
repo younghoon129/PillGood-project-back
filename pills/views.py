@@ -131,7 +131,7 @@ def category_list(request):
 
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def thread_create_api(request, pill_pk):
     pill = get_object_or_404(Pill, pk=pill_pk)
     
@@ -142,36 +142,76 @@ def thread_create_api(request, pill_pk):
     if serializer.is_valid(raise_exception=True):
         # user 필드를 저장하지 않습니다 (모델에서 nullable이거나 default 값이 있어야 함)
         # request.user를 사용하지 않으므로, Thread 모델의 user 필드가 null=True여야 합니다.
-        thread = serializer.save(pill=pill) 
+        thread = serializer.save(pill=pill, user=request.user) 
         
         # 성공 시, 생성된 쓰레드의 상세 정보를 JSON으로 반환 (201 Created)
-        return Response(ThreadSerializer(thread).data, status=201)
+        return Response(ThreadSerializer(thread, context={'request': request}).data, status=201)
+    
+# 필 굿 프로젝트 쓰레드 업데이트 로직----------------------------------------
+@csrf_exempt
+@api_view(['POST']) # Vue에서 POST로 보내므로 POST 허용
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def thread_update(request, pill_pk, thread_pk):
+    thread = get_object_or_404(Thread, pk=thread_pk)
 
-@login_required
-@require_http_methods(["GET", "POST"])
-def thread_create(request, pill_pk):
-    pill = Pill.objects.get(pk=pill_pk)
-    if request.method == "POST":
-        form = ThreadForm(request.POST, request.FILES)
-        if form.is_valid():
-            thread = form.save(commit=False)
-            thread.pill = pill
-            thread.user = request.user
-            thread.save()
+    # 🚩 권한 확인: 글 작성자와 현재 로그인 유저가 같은지 확인
+    if thread.user != request.user:
+        return Response({"detail": "수정 권한이 없습니다."}, status=403)
 
-            # generated_image_path = generate_image_with_openai(thread.title, thread.content, pill.PRDLST_NM, pill.BSSH_NM)
-            # if generated_image_path:
-            #     thread.cover_img = generated_image_path
-            #     thread.save()
+    # partial=True를 설정하면 제목이나 내용 중 하나만 보내도 수정이 가능합니다.
+    serializer = ThreadSerializer(
+        instance=thread, 
+        data=request.data, 
+        partial=True, 
+        context={'request': request}
+    )
+
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response(serializer.data)
+# -------------------------------------------------------------------------
+# 필 굿 프로젝트 쓰레드 삭제 로직 -------------------------------------------
+@csrf_exempt
+@api_view(['DELETE', 'POST']) # 안전하게 DELETE와 POST 모두 허용
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def thread_delete(request, pill_pk, thread_pk):
+    thread = get_object_or_404(Thread, pk=thread_pk)
+
+    # 🚩 권한 확인
+    if thread.user != request.user:
+        return Response({"detail": "삭제 권한이 없습니다."}, status=403)
+
+    thread.delete()
+    return Response({"detail": "후기가 삭제되었습니다."}, status=204)
+# --------------------------------------------------------------------------
+
+# @login_required
+# @require_http_methods(["GET", "POST"])
+# def thread_create(request, pill_pk):
+#     pill = Pill.objects.get(pk=pill_pk)
+#     if request.method == "POST":
+#         form = ThreadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             thread = form.save(commit=False)
+#             thread.pill = pill
+#             thread.user = request.user
+#             thread.save()
+
+#             # generated_image_path = generate_image_with_openai(thread.title, thread.content, pill.PRDLST_NM, pill.BSSH_NM)
+#             # if generated_image_path:
+#             #     thread.cover_img = generated_image_path
+#             #     thread.save()
                 
-            return redirect("pills:thread_detail", pill.pk, thread.pk)
-    else:
-        form = ThreadForm()
-    context = {
-        "form": form,
-        "pill": pill,
-    }
-    return render(request, "pills/thread_create.html", context)
+#             return redirect("pills:thread_detail", pill.pk, thread.pk)
+#     else:
+#         form = ThreadForm()
+#     context = {
+#         "form": form,
+#         "pill": pill,
+#     }
+#     return render(request, "pills/thread_create.html", context)
 
 
 # @login_required
@@ -195,57 +235,60 @@ def thread_detail(request, pill_pk, thread_pk):
     return Response(serializer.data)
 
 
-@login_required
-@require_http_methods(["GET", "POST"])
-def thread_update(request, pill_pk, thread_pk):
-    pill = Pill.objects.get(pk=pill_pk)
-    thread = Thread.objects.get(pk=thread_pk)
-    comment_form = CommentForm(request.POST)
-    if thread.user == request.user:
-        if request.method == "POST":
-            form = ThreadForm(request.POST, request.FILES, instance=thread)
-            if form.is_valid():
-                form.save()  
-                return redirect('pills:thread_detail', pill_pk=pill.pk, thread_pk=thread.pk)
-        else:
-            form = ThreadForm(instance=thread)
-    else :
-        return redirect('pills:index') 
-    context = {
-        "form": form,
-        "pill": pill,
-        "comment_form" : comment_form,
-    }
-    return render(request, "pills/thread_update.html", context)
+# @login_required
+# @require_http_methods(["GET", "POST"])
+# def thread_update(request, pill_pk, thread_pk):
+#     pill = Pill.objects.get(pk=pill_pk)
+#     thread = Thread.objects.get(pk=thread_pk)
+#     comment_form = CommentForm(request.POST)
+#     if thread.user == request.user:
+#         if request.method == "POST":
+#             form = ThreadForm(request.POST, request.FILES, instance=thread)
+#             if form.is_valid():
+#                 form.save()  
+#                 return redirect('pills:thread_detail', pill_pk=pill.pk, thread_pk=thread.pk)
+#         else:
+#             form = ThreadForm(instance=thread)
+#     else :
+#         return redirect('pills:index') 
+#     context = {
+#         "form": form,
+#         "pill": pill,
+#         "comment_form" : comment_form,
+#     }
+#     return render(request, "pills/thread_update.html", context)
 
 
-@login_required
-@require_POST
-def thread_delete(request, pill_pk, thread_pk):
-    thread = Thread.objects.get(pk=thread_pk)
-    if thread.user == request.user:
-        thread.delete()
-    return redirect("pills:detail", pill_pk)
+# @login_required
+# @require_POST
+# def thread_delete(request, pill_pk, thread_pk):
+#     thread = Thread.objects.get(pk=thread_pk)
+#     if thread.user == request.user:
+#         thread.delete()
+#     return redirect("pills:detail", pill_pk)
 
 
 # 쓰레드 좋아요 비동기 처리
-@login_required
-@require_POST
+@csrf_exempt
+@api_view(['POST']) 
+@authentication_classes([TokenAuthentication]) # 토큰으로 유저 신분 확인
+@permission_classes([IsAuthenticated]) 
 def likes(request, pill_pk, thread_pk):
     thread = get_object_or_404(Thread, pk=thread_pk)
-    if request.user in thread.likes.all():
+    
+    if thread.likes.filter(pk=request.user.pk).exists():
         thread.likes.remove(request.user)
         is_liked = False
     else:
         thread.likes.add(request.user)
         is_liked = True
+
     context = {
         'is_liked': is_liked,
-        'count': thread.likes.count(),
+        'likes_count': thread.likes.count(),
     }
 
-    # 4. redirect 대신 JsonResponse 반환
-    return JsonResponse(context)
+    return Response(context, status=200)
 
 # 쓰레드 댓글 비동기 처리
 @require_POST

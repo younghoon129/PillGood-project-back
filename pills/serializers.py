@@ -94,11 +94,14 @@ class ThreadSerializer(serializers.ModelSerializer):
     # 현재 로그인한 유저가 좋아요를 눌렀는지 여부 (SerializerMethodField 활용)
     is_liked = serializers.SerializerMethodField()
 
+    # 현재 로그인한 유저가 작성자인지 확인
+    is_author = serializers.SerializerMethodField()
+
     class Meta:
         model = Thread
         fields = (
             'id', 'title', 'content', 'cover_img', 
-            'user', 'comments', 'comment_count', 'likes_count', 'is_liked', 'created_at','updated_at'
+            'user', 'comments', 'comment_count', 'likes_count', 'is_liked', 'created_at','updated_at','is_author'
         )
         read_only_fields = ('user', 'likes')
 
@@ -106,6 +109,12 @@ class ThreadSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             return obj.likes.filter(pk=request.user.pk).exists()
+        return False
+    
+    def get_is_author(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.user == request.user
         return False
     
 # 3. 카테고리 클릭 시 -> 포함된 성분 리스트를 보여주기 위한 시리얼라이저

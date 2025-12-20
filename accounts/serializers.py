@@ -11,7 +11,7 @@ class UserTinySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         # 아이디, 닉네임, 프로필 사진만 노출 (비밀번호 등 민감정보 제외)
-        fields = ('id', 'username', 'profile_img')
+        fields = ('id', 'username', 'profile_img' , 'first_name')
 
 # ----------------------------------------------------------------
 # [2] 유저 프로필 상세 정보 (마이페이지/회원정보 수정용)
