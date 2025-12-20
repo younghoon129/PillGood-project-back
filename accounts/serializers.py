@@ -64,18 +64,22 @@ class SignupSerializer(serializers.ModelSerializer):
         fields = (
             'username', 'password', 'email', 'gender', 'age', 
             'weekly_avg_eating_time', 'annual_eating_amount', 
-            'profile_img', 'interested_genres'
+            'profile_img', 'interested_genres','allergies'
         )
 
     def create(self, validated_data):
-        # ManyToMany 필드인 interested_genres는 따로 빼서 처리
-        genres = validated_data.pop('interested_genres', [])
-        
-        # create_user를 사용하여 비밀번호를 암호화하여 저장
+        # 1. 다대다 관계 데이터(M2M)는 일반 필드 생성 시 함께 넣을 수 없으므로 추출(pop)합니다.
+        genres_data = validated_data.pop('interested_genres', [])
+        allergies_data = validated_data.pop('allergies', [])
+
+        # 2. 유저 객체를 먼저 생성합니다. (create_user를 사용해야 비밀번호가 암호화됩니다.)
         user = User.objects.create_user(**validated_data)
-        
-        # 다대다 관계 설정
-        if genres:
-            user.interested_genres.set(genres)
-            
+
+        # 3. 생성된 유저 객체(ID가 생김)에 다대다 관계를 연결합니다.
+        if genres_data:
+            user.interested_genres.set(genres_data)
+        if allergies_data:
+            user.allergies.set(allergies_data)
+
         return user
+    
