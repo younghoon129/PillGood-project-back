@@ -68,6 +68,8 @@ class User(AbstractUser):
 
     email = models.EmailField(unique=True)
 
+    provider = models.CharField(max_length=20, default='local')
+
     def __str__(self):
         return self.username
 

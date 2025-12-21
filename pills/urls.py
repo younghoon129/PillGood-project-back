@@ -10,6 +10,26 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("<int:pill_pk>/", views.detail, name="detail"),
 
+    # 영양제함 담기
+    path('<int:pill_pk>/toggle/', views.toggle_pill, name='toggle_pill'),
+
+    # 🚩 내 영양제함 목록 불러오기 (마이페이지용)
+    path('my-pills/', views.my_pills, name='my_pills'),
+
+    # 사용자의 영양제함에 들어있는지 확인
+    path('<int:pill_pk>/is-enrolled/', views.check_pill_enrollment, name='check_enrollment'),
+
+    # 사용자 커스텀 영양제
+    path('custom-pills/', views.custom_pill_list, name='custom_pill_list'),
+
+    # 사용자 커스텀 영양제 삭제
+    path('custom-pills/<int:pk>/', views.custom_pill_detail, name='custom_pill_detail'),
+
+    # 사용자 커스텀 영양제에 성분 작성 할 때, 목록 띄우기
+    path('all-ingredients/', views.all_ingredients_list, name='all_ingredients_list'),
+
+    
+
     # 아래는 vue랑 django 연결해주는 쓰레드 목록 조회 api 새로 작성
     path("<int:pill_pk>/threads/", views.thread_list, name="thread_list"),
 
