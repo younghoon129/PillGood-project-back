@@ -22,6 +22,7 @@ from django.views.decorators.http import (
 )
 from .serializers import SignupSerializer,UserProfileSerializer,AllergySerializer
 from django.utils.crypto import get_random_string
+from django.contrib.auth import update_session_auth_hash
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -126,6 +127,34 @@ def user_profile(request):
             'allergies': list(user.allergies.values_list('id', flat=True))
         })
 # -------------------------------------------------------------------
+# --------------자체 회원 비밀번호 변경 ----------------------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    user = request.user
+    # 소셜 로그인 사용자는 비밀번호 변경 불가 처리
+    if user.provider != 'local':
+        return Response({"error": "소셜 로그인 계정은 비밀번호를 변경할 수 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+    current_password = request.data.get('current_password')
+    new_password = request.data.get('new_password')
+
+    # 기존 비밀번호 확인
+    if not user.check_password(current_password):
+        return Response({"error": "현재 비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # 새 비밀번호 설정
+    user.set_password(new_password)
+    user.save()
+    
+    # 비밀번호 변경 후 로그인 세션 유지 (토큰 방식이어도 권장됨)
+    update_session_auth_hash(request, user)
+    
+    return Response({"message": "비밀번호가 성공적으로 변경되었습니다."}, status=status.HTTP_200_OK)
+# ----------------------------------------------------------------------------
+
+
+# --------------------------------------------------------------------
 @api_view(['GET'])
 @permission_classes([AllowAny]) # 누구나 목록은 볼 수 있게 설정
 def allergy_list(request):

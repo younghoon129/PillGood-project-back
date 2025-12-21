@@ -33,7 +33,7 @@ from .serializers import (
     CustomPillSerializer
 )
 from django.db.models import Count
-from rest_framework.permissions import AllowAny
+from django.contrib.auth import update_session_auth_hash
 
 
 # Index 페이지
@@ -260,6 +260,7 @@ def all_ingredients_list(request):
     ingredients = Nutrient.objects.values_list('substance_name', flat=True).distinct().order_by('substance_name')
     return Response(list(ingredients))
 # ----------------------------------------------------------------------------
+
 
 # @login_required
 # @require_http_methods(["GET", "POST"])
