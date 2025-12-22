@@ -28,7 +28,8 @@ urlpatterns = [
     # 사용자 커스텀 영양제에 성분 작성 할 때, 목록 띄우기
     path('all-ingredients/', views.all_ingredients_list, name='all_ingredients_list'),
 
-    
+    # 챗봇 서비스 url
+    path('chatbot/', views.chatbot_view, name='chatbot_view'),
 
     # 아래는 vue랑 django 연결해주는 쓰레드 목록 조회 api 새로 작성
     path("<int:pill_pk>/threads/", views.thread_list, name="thread_list"),

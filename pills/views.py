@@ -37,6 +37,7 @@ from django.contrib.auth import update_session_auth_hash
 
 from .utils import get_purchase_link
 from rest_framework.views import APIView
+from .utils import get_pill_recommendation
 
 # Index 페이지
 # 장르별 필터링
@@ -516,6 +517,13 @@ def substance_pills(request, substance_id):
     return paginator.get_paginated_response(serializer.data)
 
 
+# ------------- AI 추천 서비스 --------------------------------
+@api_view(['POST'])
+def chatbot_view(request):
+    user_input = request.data.get('message')
+    reply = get_pill_recommendation(user_input)
+    return Response({'reply': reply})
+# ------------------------------------------------------------
 
 
 

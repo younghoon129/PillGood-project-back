@@ -1,6 +1,12 @@
 import requests
 import re
 from django.conf import settings
+import json
+import random
+import urllib3
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 def clean_text(text):
     """
@@ -145,3 +151,135 @@ def format_result(item):
         "amount": amt,      # 숫자 (예: 120)
         "unit_type": unit   # 단위 (예: 'C' 또는 'D')
     }
+
+# ---------------------------- AI 영양제 추천 서비스 -----------------------------------------------------------
+# SSL 인증서 경고 제어
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# ==========================================
+# 1. 설정 (SSAFY GMS API)
+# ==========================================
+GMS_KEY = os.getenv("GMS_KEY")
+BASE_URL = "https://gms.ssafy.io/gmsapi/generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent"
+
+# 장고 프로젝트 상대 경로로 수정 (절대 경로 대신 settings.BASE_DIR 사용)
+DATA_FILE = os.path.join(settings.BASE_DIR, 'pills', 'fixtures', 'pills_lite_final.json')
+
+# ==========================================
+# 2. 데이터 로드
+# ==========================================
+def load_data():
+    try:
+        with open(DATA_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"❌ 오류: '{DATA_FILE}' 파일이 없습니다.")
+        return []
+
+# ==========================================
+# 3. 매핑 없는 스마트 검색 (데이터 기반 검색)
+# ==========================================
+def search_relevant_products(data, user_input):
+    candidates = []
+    user_keywords = user_input.split()
+
+    for item in data:
+        fields = item.get('fields', {})
+        name = fields.get('PRDLST_NM', '')
+        function = fields.get('PRIMARY_FNCLTY', '')
+        shape = fields.get('PRDT_SHAP_CD_NM', '')
+        appearance = fields.get('DISPOS', '')
+        
+        score = 0
+        for word in user_keywords:
+            if len(word) >= 2: 
+                if word in function: score += 2
+                if word in name: score += 1
+        
+        candidates.append({
+            "name": name,
+            "function": function,
+            "shape_info": f"{shape} ({appearance})",
+            "usage": fields.get('NTK_MTHD', ''),
+            "score": score
+        })
+    
+    random.shuffle(candidates) 
+    candidates.sort(key=lambda x: x['score'], reverse=True)
+    
+    return candidates[:5]
+
+# ==========================================
+# 4. AI 답변 생성 (요청하신 프롬프트 내용 엄격 유지)
+# ==========================================
+def generate_detailed_recommendation(user_input, products):
+    if not products:
+        return "죄송합니다. 데이터에서 적합한 제품을 찾기 어렵습니다. 조금 더 구체적으로 말씀해 주시겠어요?"
+
+    product_context = ""
+    for idx, p in enumerate(products):
+        product_context += f"""
+        [후보 {idx+1}]
+        - 제품명: {p['name']}
+        - 제형/성상: {p['shape_info']}
+        - 주요기능성(성분포함): {p['function']}
+        - 섭취방법: {p['usage']}
+        """
+
+    system_prompt = f"""
+    당신은 사용자의 건강을 생각하는 헬스케어 멘토 **'PillGood(필굿)'**입니다.
+    사용자는 **"{user_input}"**라는 고민이나 상황을 가지고 있습니다. (본인의 증상일 수도 있고, 누군가를 위한 선물일 수도 있습니다.)
+    
+    고객을 존중하는 정중한 태도(존댓말)를 유지하되, **핵심만 명확하게 전달**하는 전문가의 모습을 보여주세요.
+
+    위 [후보 제품 목록] 중 사용자의 상황 해결에 가장 적합한 **단 하나의 제품**을 추천해 주세요.
+
+    [작성 가이드 - 엄격 준수]
+    1. **볼드체(**) 사용 금지**: 모든 텍스트는 일반 폰트로 깔끔하게 출력하세요.
+    2. **다목적 추천**: 선물이면 선물하기 좋은 이유를, 본인이 먹는 것이면 증상 개선에 초점을 맞춰 설명하세요.
+    3. **의학적 신중함**: 질병의 치료제가 아님을 유의하고, "~에 도움을 줄 수 있습니다"와 같이 표현하세요.
+    4. **가독성**: 문단 사이를 띄워 읽기 편하게 하고, 선택 이유는 번호를 매겨 설명하세요.
+
+    [출력 양식]
+    🎁 추천 제품: (제품명)
+
+    🧪 주요 성분 및 효능
+    (핵심 성분명과 그 성분이 우리 몸에서 하는 역할을 요약)
+
+    💊 형태 및 생김새
+    (섭취 편의성을 고려하여 제형 정보를 설명)
+
+    💡 PillGood의 선택 이유
+    1. (사용자의 상황 "{user_input}"과 성분의 효능을 연결하여 설명)
+    2. (제형의 장점이나 섭취 방법의 용이성, 혹은 라이프스타일 적합성 언급)
+
+    ⚠️ 건강 안내
+    본 추천은 건강기능식품에 대한 정보 제공을 목적으로 하며, 의학적 진단이나 치료를 대신할 수 없습니다. 증상이 심하거나 지속될 경우 반드시 병원을 방문하여 전문가의 진료를 받으시기 바랍니다.
+    """
+
+    headers = {"Content-Type": "application/json"}
+    url = f"{BASE_URL}?key={GMS_KEY}"
+    payload = {
+        "contents": [{"parts": [{"text": system_prompt}]}]
+    }
+
+    try:
+        response = requests.post(url, headers=headers, json=payload, verify=False, timeout=10)
+        if response.status_code == 200:
+            return response.json()['candidates'][0]['content']['parts'][0]['text']
+        else:
+            return f"API 호출 오류: {response.text}"
+    except Exception as e:
+        return f"오류 발생: {e}"
+
+# ==========================================
+# 5. [추가] 뷰에서 호출할 통합 인터페이스
+# ==========================================
+def get_pill_recommendation(user_input):
+    data = load_data()
+    if not data:
+        return "영양제 데이터를 불러올 수 없습니다."
+    
+    candidates = search_relevant_products(data, user_input)
+    return generate_detailed_recommendation(user_input, candidates)
+# ----------------------------------------------------------------------------------------------------------
