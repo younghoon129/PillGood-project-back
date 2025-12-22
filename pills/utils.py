@@ -162,7 +162,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 GMS_KEY = os.getenv("GMS_KEY")
 BASE_URL = "https://gms.ssafy.io/gmsapi/generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent"
 
-# 장고 프로젝트 상대 경로로 수정 (절대 경로 대신 settings.BASE_DIR 사용)
+# 장고 프로젝트 상대 경로로 수정 
 DATA_FILE = os.path.join(settings.BASE_DIR, 'pills', 'fixtures', 'pills_lite_final.json')
 
 # ==========================================
@@ -177,7 +177,7 @@ def load_data():
         return []
 
 # ==========================================
-# 3. 매핑 없는 스마트 검색 (데이터 기반 검색)
+# 3.  스마트 검색 (데이터 기반 검색)
 # ==========================================
 def search_relevant_products(data, user_input):
     candidates = []
@@ -210,7 +210,7 @@ def search_relevant_products(data, user_input):
     return candidates[:5]
 
 # ==========================================
-# 4. AI 답변 생성 (요청하신 프롬프트 내용 엄격 유지)
+# 4. AI 답변 생성 
 # ==========================================
 def generate_detailed_recommendation(user_input, products):
     if not products:
