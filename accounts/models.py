@@ -66,7 +66,7 @@ class User(AbstractUser):
         'self', symmetrical=False, related_name='followers'
     )
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
 
     provider = models.CharField(max_length=20, default='local')
 
