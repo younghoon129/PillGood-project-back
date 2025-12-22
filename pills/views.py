@@ -62,15 +62,15 @@ def index(request):
             pills = pills.filter(STDR_STND__icontains=keyword)
             
         # [형태]로 검색 (정제, 캡슐 등)
-        # elif search_type == 'shape':
-        #     pills = pills.filter(PRDT_SHAP_CD_NM__icontains=keyword)
-        # else: # 전체 검색
-        #     pills = pills.filter(
-        #         Q(PRDLST_NM__icontains=keyword) |
-        #         Q(BSSH_NM__icontains=keyword) |
-        #         Q(STDR_STND__icontains=keyword) |
-        #         Q(PRDT_SHAP_CD_NM__icontains=keyword)
-        #     )
+        elif search_type == 'shape':
+            pills = pills.filter(PRDT_SHAP_CD_NM__icontains=keyword)
+        else: # 전체 검색
+            pills = pills.filter(
+                Q(PRDLST_NM__icontains=keyword) |
+                Q(BSSH_NM__icontains=keyword) |
+                Q(STDR_STND__icontains=keyword) |
+                Q(PRDT_SHAP_CD_NM__icontains=keyword)
+            )
     
     shapes_str = request.GET.get('shapes') 
     
