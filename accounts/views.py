@@ -211,7 +211,8 @@ def kakao_login(request):
             "redirect_uri": REDIRECT_URI,
             "code": code,
         },
-        headers={"Content-type": "application/x-www-form-urlencoded;charset=utf-8"}
+        headers={"Content-type": "application/x-www-form-urlencoded;charset=utf-8"},
+        verify=False
     )
     
     access_token = token_res.json().get("access_token")
@@ -220,7 +221,8 @@ def kakao_login(request):
 
     user_info_res = requests.get(
         "https://kapi.kakao.com/v2/user/me",
-        headers={"Authorization": f"Bearer {access_token}"}
+        headers={"Authorization": f"Bearer {access_token}"},
+        verify=False
     )
     user_json = user_info_res.json()
     kakao_account = user_json.get("kakao_account")
@@ -251,7 +253,6 @@ def kakao_login(request):
 # -------------------------------------------------------------
 # 네이버 로그인 코드
 # accounts/views.py
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def naver_login(request):
