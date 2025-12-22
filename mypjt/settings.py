@@ -17,7 +17,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # OpenAI API Key 가져오기
 import os
+import dotenv 
+dotenv.load_dotenv()
 
+NAVER_CLIENT_ID = os.environ.get("NAVER_CLIENT_ID")
+NAVER_SECRET_KEY = os.environ.get("NAVER_SECRET_KEY")
+print(f"🔑 네이버 쇼핑 키 로드 확인: {NAVER_CLIENT_ID}")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 

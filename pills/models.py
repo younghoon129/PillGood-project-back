@@ -63,6 +63,13 @@ class Pill(models.Model):
     LAST_UPDT_DTM = models.CharField(max_length=14, verbose_name="최종 수정 일시 (JSON 원본)")
     cover = models.URLField(null=True, blank=True, verbose_name="제품 이미지 URL")
     
+    # --- 제품 갯수(가성비 게산하기 위해 필요) ---
+    amount = models.IntegerField(null=True, blank=True, default=0) # 갯수
+    unit_type = models.CharField(max_length=10, null=True, blank=True) # 단위
+    # --- 네이버 제품 등록 ---
+    purchase_url = models.URLField(null=True, blank=True) # 구매 링크
+    price = models.IntegerField(null=True, blank=True)    # 가격
+    mall_name = models.CharField(max_length=50, null=True, blank=True) # 판매처
     def __str__(self):
         return self.PRDLST_NM
 
