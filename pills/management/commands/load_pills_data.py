@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand, CommandError
 from pills.models import Pill, Nutrient, Allergen, Category, Substance
 from django.db import transaction
 
-FIXTURE_PATH = 'pills/fixtures/pills_fixture_data.json' 
+FIXTURE_PATH = 'pills/fixtures/pills_lite_final.json' 
 
 class Command(BaseCommand):
     help = 'JSON 파일에서 건강기능식품 데이터를 로드하여 Substance 기반으로 Category를 유추하고 저장합니다.'

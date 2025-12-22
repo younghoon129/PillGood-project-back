@@ -215,7 +215,7 @@ def toggle_pill(request, pill_pk):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def my_pills(request):
-    pills = UserPill.objects.filter(user=request.user).order_by('-created_at')
+    pills = UserPill.objects.filter(user=request.user).select_related('pill').prefetch_related('pill__nutrient_details')
     serializer = UserPillSerializer(pills, many=True)
     return Response(serializer.data)
 # ---------------------------------------------------------------------------

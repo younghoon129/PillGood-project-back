@@ -140,9 +140,11 @@ class CategoryWithSubstancesSerializer(serializers.ModelSerializer):
 
 class PillSimpleSerializer(serializers.ModelSerializer):
     """영양제함 목록에 보여줄 최소한의 정보"""
+    nutrient_details = NutrientDetailSerializer(many=True, read_only=True)
+
     class Meta:
         model = Pill
-        fields = ('id', 'PRDLST_NM', 'cover', 'BSSH_NM')
+        fields = ('id', 'PRDLST_NM', 'cover', 'BSSH_NM','nutrient_details')
 
 class UserPillSerializer(serializers.ModelSerializer):
     pill = PillSimpleSerializer(read_only=True) # 상세 정보 포함
