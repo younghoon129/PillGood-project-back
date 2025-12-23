@@ -16,4 +16,9 @@ urlpatterns = [
     path('allergies/', views.allergy_list, name='allergy_list'),
     # 자체 회원 비밀번호 변경
     path('change-password/', views.change_password, name='change_password'),
+    # 아이디 찾기
+    path('find-id/', views.find_id, name='find_id'),
+    # 구글 SMTP 활용해서 , 비밀번호 찾기
+    path('password-reset-send/', views.password_reset_send),
+    path('password-reset-confirm/', views.password_reset_confirm),
 ]

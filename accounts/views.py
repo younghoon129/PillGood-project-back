@@ -23,6 +23,10 @@ from django.views.decorators.http import (
 from .serializers import SignupSerializer,UserProfileSerializer,AllergySerializer
 from django.utils.crypto import get_random_string
 from django.contrib.auth import update_session_auth_hash
+import requests
+import random
+from django.core.mail import send_mail
+from .models import PasswordResetCode
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -82,6 +86,38 @@ def user_delete(request):
         status=status.HTTP_204_NO_CONTENT
     )
 
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def find_id(request):
+    email = request.data.get('email')
+    
+    if not email:
+        return Response({'error': '이메일을 입력해주세요.'}, status=400)
+    
+    # 🚩 get() 대신 filter()를 사용해 모든 계정을 가져옵니다.
+    users = User.objects.filter(email=email)
+    
+    if not users.exists():
+        return Response({'error': '해당 이메일로 가입된 계정이 없습니다.'}, status=404)
+    
+    user_list = []
+    for user in users:
+        # 소셜 로그인 유저인지 판별 (보통 소셜 유저는 비밀번호가 없거나 특정 필드가 있습니다)
+        # 여기서는 소셜 로그인 연동 방식에 따라 다르지만, 일반적으로 password가 없는 경우로 체크하거나
+        # 소셜 앱 이름이 포함된 경우를 체크합니다.
+        is_social = not user.has_usable_password() 
+        
+        user_list.append({
+            'username': user.username,
+            'is_social': is_social,
+            'date_joined': user.date_joined.strftime('%Y-%m-%d') # 가입일 추가하면 구분하기 쉬움
+        })
+    
+    return Response({
+        'users': user_list, # 🚩 여러 개를 리스트로 보냄
+        'message': '아이디를 찾았습니다.'
+    }, status=200)
 
 
 # -------------------------------------------------------------------
@@ -166,6 +202,67 @@ def allergy_list(request):
     return Response(serializer.data)
 # --------------------------------------------------------------------
 
+# -------구글 SMTP 함수 -----------------------------------------------
+# 인증번호 발송 API
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def password_reset_send(request):
+    email = request.data.get('email')
+    
+    if not email:
+        return Response({'error': '이메일을 입력해주세요.'}, status=400)
+    
+    # 1. 유저 존재 여부 확인
+    user = User.objects.filter(email=email).first()
+    if not user:
+        return Response({'error': '등록되지 않은 이메일입니다.'}, status=404)
+    
+    # 2. 인증코드 생성 및 저장
+    auth_code = str(random.randint(100000, 999999))
+    PasswordResetCode.objects.filter(email=email).delete() # 기존 코드 삭제
+    PasswordResetCode.objects.create(email=email, code=auth_code)
+
+    # 3. 메일 발송
+    subject = "[PillGood] 비밀번호 재설정 인증번호"
+    message = f"귀하의 인증번호는 [{auth_code}] 입니다. 5분 이내에 입력해 주세요."
+    
+    try:
+        # settings.EMAIL_HOST_USER가 None이 아닌지 꼭 확인하세요!
+        send_mail(subject, message, settings.EMAIL_HOST_USER, [email], fail_silently=False)
+        return Response({'message': '인증번호가 발송되었습니다.'}, status=200)
+    except Exception as e:
+        # 메일 서버 연결 실패 시 에러 출력
+        print(f"SMTP Error: {e}")
+        return Response({'error': '메일 발송에 실패했습니다. 관리자에게 문의하세요.'}, status=500)
+
+# 인증번호 검증 및 비밀번호 변경
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def password_reset_confirm(request):
+    email = request.data.get('email')
+    code = request.data.get('code')
+    new_password = request.data.get('new_password')
+    
+    # 코드 유효성 검사
+    reset_entry = PasswordResetCode.objects.filter(email=email, code=code).first()
+    
+    if not reset_entry:
+        return Response({'error': '인증번호가 일치하지 않습니다.'}, status=400)
+    
+    if not reset_entry.is_valid():
+        reset_entry.delete()
+        return Response({'error': '인증번호가 만료되었습니다. 다시 시도해주세요.'}, status=400)
+
+    # 비밀번호 업데이트
+    user = User.objects.get(email=email)
+    user.set_password(new_password)
+    user.save()
+    
+    # 사용한 코드 삭제
+    reset_entry.delete()
+    
+    return Response({'message': '비밀번호가 성공적으로 변경되었습니다.'}, status=200)
+# --------------------------------------------------------------------
 
 
 @require_POST
