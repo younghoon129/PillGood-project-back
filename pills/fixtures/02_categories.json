@@ -1,0 +1,306 @@
+[
+  {
+    "model": "pills.category",
+    "pk": 99,
+    "fields": {
+      "name": "기타 건강식품",
+      "substances": []
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 100,
+    "fields": {
+      "name": "간 건강 (피로/해독)",
+      "substances": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 101,
+    "fields": {
+      "name": "위/소화기",
+      "substances": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 102,
+    "fields": {
+      "name": "심장/혈압",
+      "substances": [
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 103,
+    "fields": {
+      "name": "호흡기/구강",
+      "substances": [
+        9,
+        10,
+        28,
+        29,
+        30
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 104,
+    "fields": {
+      "name": "유아/아동 (성장/면역)",
+      "substances": [
+        9,
+        18,
+        31,
+        32,
+        33,
+        34,
+        35
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 105,
+    "fields": {
+      "name": "남성 건강",
+      "substances": [
+        4,
+        9,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 106,
+    "fields": {
+      "name": "여성 건강",
+      "substances": [
+        24,
+        35,
+        42,
+        43,
+        44,
+        45
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 107,
+    "fields": {
+      "name": "뇌/신경/수면",
+      "substances": [
+        6,
+        7,
+        27,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 108,
+    "fields": {
+      "name": "눈 건강",
+      "substances": [
+        20,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 109,
+    "fields": {
+      "name": "혈관/혈액순환",
+      "substances": [
+        11,
+        20,
+        21,
+        22,
+        25,
+        26,
+        43,
+        63,
+        64
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 110,
+    "fields": {
+      "name": "관절/뼈",
+      "substances": [
+        27,
+        31,
+        32,
+        33,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 111,
+    "fields": {
+      "name": "장 건강/배변",
+      "substances": [
+        18,
+        19,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 112,
+    "fields": {
+      "name": "피부/미용",
+      "substances": [
+        3,
+        10,
+        11,
+        19,
+        44,
+        60,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 113,
+    "fields": {
+      "name": "면역/활력",
+      "substances": [
+        9,
+        10,
+        28,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 114,
+    "fields": {
+      "name": "다이어트 (체지방)",
+      "substances": [
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110
+      ]
+    }
+  },
+  {
+    "model": "pills.category",
+    "pk": 115,
+    "fields": {
+      "name": "근육/운동",
+      "substances": [
+        40,
+        41,
+        111,
+        112,
+        113,
+        114,
+        115
+      ]
+    }
+  }
+]
