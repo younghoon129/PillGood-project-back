@@ -1,4 +1,5 @@
 # export_lite.py
+# 4만개 데이터 중 가격 -1 아닌 것만 저장하기
 import os
 import django
 from django.core.serializers import serialize

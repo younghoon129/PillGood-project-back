@@ -1,4 +1,5 @@
 # 판매처 없는 영양제들은 안보이게(-1로) 해뒀는데, 이 파일 실행시 None으로 되돌려줌
+
 # pills/management/commands/reset_failed_pills.py
 from django.core.management.base import BaseCommand
 from pills.models import Pill

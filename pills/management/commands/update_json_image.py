@@ -1,3 +1,5 @@
+# 네이버 정보 넣는거
+
 import json
 import os
 import time

@@ -1,3 +1,5 @@
+# 4만개짜리 데이터 로드하는 거
+
 import time
 import concurrent.futures
 from django.core.management.base import BaseCommand
