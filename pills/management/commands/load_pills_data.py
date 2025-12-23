@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand, CommandError
 from pills.models import Pill, Nutrient, Allergen, Category, Substance
 from django.db import transaction
 
-FIXTURE_PATH = 'pills/fixtures/pills_lite_final.json' 
+FIXTURE_PATH = 'pills/fixtures/pills_final_with_images.json' 
 
 class Command(BaseCommand):
     help = 'JSON 파일에서 건강기능식품 데이터를 로드하여 Substance 기반으로 Category를 유추하고 저장합니다.'
@@ -147,6 +147,10 @@ class Command(BaseCommand):
                             'CRET_DTM': item.get('CRET_DTM', ''), 
                             'LAST_UPDT_DTM': item.get('LAST_UPDT_DTM', ''), 
                             'PRDT_SHAP_CD_NM': item.get('PRDT_SHAP_CD_NM', ''),
+                            'cover': item.get('cover'),                 # 이미지 URL (null 가능)
+                            'purchase_url': item.get('purchase_url'),   # 구매 링크
+                            'price': item.get('price'),                 # 가격
+                            'mall_name': item.get('mall_name'),
                         }
                     )
 

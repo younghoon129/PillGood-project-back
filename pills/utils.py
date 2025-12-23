@@ -148,6 +148,7 @@ def format_result(item):
         "link": item['link'],
         "price": int(item['lprice']),
         "mall": item['mallName'],
+        "image": item['image'],
         "amount": amt,      # 숫자 (예: 120)
         "unit_type": unit   # 단위 (예: 'C' 또는 'D')
     }

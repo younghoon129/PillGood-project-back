@@ -142,6 +142,7 @@ def detail(request, pill_pk):
             pill.purchase_url = link_data['link']
             pill.price = link_data['price']
             pill.mall_name = link_data['mall']
+            pill.cover = link_data.get('image')
         else:
             print("❌ 검색 결과 없음 또는 제조사 불일치 (제습기 차단됨 🛡️)")
             pill.price = -1
