@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-any-random-string-12345'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['3.39.233.172', '3.39.233.172.nip.io' ,'localhost', '127.0.0.1']
 
 from corsheaders.defaults import default_headers
 CORS_ALLOW_HEADERS = list(default_headers) + [
@@ -46,7 +46,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # 구글 SMTP 설정 ------------------------------------------------------
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_USE_TLS = False
@@ -88,6 +88,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'http://localhost:5173',
+    'http://3.39.233.172.nip.io'
 ]
 
 ROOT_URLCONF = 'mypjt.urls'
@@ -156,6 +157,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

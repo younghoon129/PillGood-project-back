@@ -298,7 +298,7 @@ def kakao_login(request):
         return Response({'error': '코드가 없습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
     REST_API_KEY = os.getenv("KAKAO_REST_API_KEY")
-    REDIRECT_URI = "http://localhost:5173/login/kakao"
+    REDIRECT_URI = os.getenv("KAKAO_REDIRECT_URI")
 
     token_res = requests.post(
         "https://kauth.kakao.com/oauth/token",
