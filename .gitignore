@@ -3,6 +3,8 @@
 pills_fixture_data.json
 pills_lite_final.json
 
+
+
 ### Django ###
 *.log
 *.pot
