@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from pills.models import Category
 from django.utils import timezone
 from datetime import timedelta
+from django.conf import settings
 
 class Allergy(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -87,3 +88,9 @@ class PasswordResetCode(models.Model):
 
     def __str__(self):
         return f"{self.email} - {self.code}"
+
+class GoogleSocialAccount(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    google_refresh_token = models.TextField(null=True, blank=True)
+    google_access_token = models.TextField(null=True, blank=True)
+    is_linked = models.BooleanField(default=False)

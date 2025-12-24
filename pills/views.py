@@ -38,6 +38,7 @@ from django.contrib.auth import update_session_auth_hash
 from .utils import get_purchase_link
 from rest_framework.views import APIView
 from .utils import get_pill_recommendation
+from accounts.models import GoogleSocialAccount
 
 # Index 페이지
 # 장르별 필터링
@@ -537,27 +538,65 @@ def register_google_calendar(request):
     pill_name = request.data.get('pillName')
     selected_date = request.data.get('date')
     intake_time = request.data.get('time')
-    google_token = request.headers.get('Google-Access-Token')
+    description = request.data.get('description', '')
 
-    # RFC3339 시간 포맷 설정
-    start_time = f"{selected_date}T{intake_time}:00+09:00"
-    end_dt = datetime.strptime(f"{selected_date}T{intake_time}", "%Y-%m-%dT%H:%M") + timedelta(minutes=30)
-    end_time = end_dt.strftime("%Y-%m-%dT%H:%M:%S+09:00")
+    # 2. DB에서 현재 로그인된 유저의 구글 토큰 가져오기
+    try:
+        social_account = GoogleSocialAccount.objects.get(user=request.user)
+        
+        if not social_account.is_linked:
+             return Response({"error": "구글 연동이 해제된 상태입니다."}, status=400)
+             
+        google_token = social_account.google_access_token
+        
+    except GoogleSocialAccount.DoesNotExist:
+        return Response({"error": "연동된 구글 계정 정보가 DB에 없습니다."}, status=400)
 
-    payload = {
-        'summary': f'💊 {pill_name} 복용',
-        'start': {'dateTime': start_time, 'timeZone': 'Asia/Seoul'},
-        'end': {'dateTime': end_time, 'timeZone': 'Asia/Seoul'},
-    }
+    try:
+        # 3. 구글 API 요구 시간 포맷팅
+        start_time = f"{selected_date}T{intake_time}:00+09:00"
+        
+        start_dt = datetime.strptime(f"{selected_date}T{intake_time}", "%Y-%m-%dT%H:%M")
+        end_dt = start_dt + timedelta(minutes=30)
+        end_time = end_dt.strftime("%Y-%m-%dT%H:%M:%S+09:00")
 
-    res = requests.post(
-        "https://www.googleapis.com/calendar/v3/calendars/primary/events",
-        json=payload,
-        headers={"Authorization": f"Bearer {google_token}"}
-    )
+        # 4. 구글 캘린더 API 전송 데이터 구성
+        payload = {
+            'summary': f'💊 {pill_name} 복용 알림',
+            'description': description,
+            'start': {
+                'dateTime': start_time,
+                'timeZone': 'Asia/Seoul',
+            },
+            'end': {
+                'dateTime': end_time,
+                'timeZone': 'Asia/Seoul',
+            },
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                    {'method': 'popup', 'minutes': 10},
+                ],
+            },
+        }
 
-    if res.status_code in [200, 201]:
-        return Response({"message": "등록 성공"}, status=200)
-    return Response(res.json(), status=res.status_code)
+        # 5. 구글 캘린더 API 호출 (DB에서 가져온 토큰 사용)
+        res = requests.post(
+            "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+            json=payload,
+            headers={"Authorization": f"Bearer {google_token}"}
+        )
+
+        if res.status_code in [200, 201]:
+            return Response({"message": "구글 캘린더 일정 등록 성공"}, status=200)
+        else:
+            # 토큰이 만료된 경우 구글이 401 에러를 보냄
+            return Response({
+                "error": "구글 API 인증 오류",
+                "detail": res.json()
+            }, status=res.status_code)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
 # -----------------------------------------------------------------
 

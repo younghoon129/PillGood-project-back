@@ -26,7 +26,7 @@ from django.contrib.auth import update_session_auth_hash
 import requests
 import random
 from django.core.mail import send_mail
-from .models import PasswordResetCode
+from .models import PasswordResetCode,GoogleSocialAccount
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -404,14 +404,15 @@ def naver_login(request):
 
 # ------구글 연동---------------------------------------------
 @api_view(['POST'])
+@authentication_classes([TokenAuthentication])
 @permission_classes([AllowAny])
 def google_callback(request):
     code = request.data.get('code')
     client_id = os.getenv("GOOGLE_CLIENT_ID")
-    client_secret = os.getenv("GOOGLE_CLIENT_KEY") # 🚩 본인의 Client Secret 입력
-    redirect_uri = "http://localhost:5173/login/google"
+    client_secret = os.getenv("GOOGLE_CLIENT_KEY")
+    redirect_uri = os.getenv("GOOGLE_REDIRECT_URI")
 
-    # 1. 구글 엑세스 토큰 요청
+    # 1. 구글로부터 액세스 토큰 요청
     token_res = requests.post("https://oauth2.googleapis.com/token", data={
         'code': code,
         'client_id': client_id,
@@ -425,41 +426,86 @@ def google_callback(request):
     if not google_access_token:
         return Response({'error': '구글 토큰 발급 실패', 'detail': token_data}, status=400)
 
-    # 2. 구글 유저 정보 가져오기 (이메일 확인용)
+    # 2. 구글 유저 정보 가져오기
     user_info = requests.get(
         "https://www.googleapis.com/oauth2/v2/userinfo",
         headers={'Authorization': f'Bearer {google_access_token}'}
     ).json()
+    
+    google_access_token = token_data.get('access_token')
+    google_id = user_info.get('id')
     email = user_info.get('email')
 
-    # 🚩 [핵심] 이미 로그인된 사용자(카카오/네이버 등)가 연동을 시도한 경우
-    if request.user.is_authenticated:
-        token, _ = Token.objects.get_or_create(user=request.user)
-        return Response({
-            'status': 'linked',
-            'token': token.key,
-            'nickname': request.user.first_name,
-            'id': request.user.id,
-            'google_access_token': google_access_token
-        }, status=200)
+    print(f"현재 접속 유저: {request.user}") 
+    print(f"인증 여부: {request.user.is_authenticated}")
 
-    # 3. 로그인되지 않은 상태에서 구글로 시작하는 경우 (기존 로직)
-    username = f"google_{email.split('@')[0]}"
-    user, created = User.objects.get_or_create(
-        username=username,
+    # 🚩 [케이스 1] 이미 로그인된 유저(자체 회원/타 소셜)가 연동을 시도하는 경우
+    if request.user.is_authenticated:
+        user = request.user
+        status_msg = 'linked'
+    else:
+        # [케이스 2] 로그아웃 상태에서 구글 로그인을 시도하는 경우
+        google_username = f"google_{google_id[:15]}"
+        user, created = User.objects.get_or_create(
+            username=google_username,
+            defaults={
+                'email': email,
+                'first_name': user_info.get('name', 'GoogleUser'),
+                'password': get_random_string(32)
+            }
+        )
+        status_msg = 'login'
+    
+    GoogleSocialAccount.objects.update_or_create(
+        user=user,
         defaults={
-            'email': email,
-            'first_name': user_info.get('name', 'GoogleUser'),
-            'password': get_random_string(32)
+            'google_access_token': google_access_token,
+            'is_linked': True  # 연동 성공 상태 기록
         }
     )
-    
+
+    # 장고 서비스 이용을 위한 토큰 발급
     django_token, _ = Token.objects.get_or_create(user=user)
 
     return Response({
-        'status': 'login',
+        'status': status_msg,
         'token': django_token.key,
-        'nickname': user.first_name,
+        'nickname': user.first_name or user.username,
+        'username': user.username,  # 자체 회원의 경우 원래 아이디가 반환됨
+        'id': user.id,
+        'google_access_token': google_access_token # 프론트에서 캘린더 등록 시 사용
+    }, status=200)
+
+
+# ------------ 구글 캘린더 연동한 사용자의 토큰을 DB 넘기는 부분 ------------------------------
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def check_google_link(request):
+    # DB에 해당 유저의 연동 데이터가 있고 is_linked가 True인지 확인
+    is_linked = GoogleSocialAccount.objects.filter(user=request.user, is_linked=True).exists()
+    
+    return Response({'is_linked': is_linked})
+
+
+# ----------- 구글 연동 해제 ------------------------------------------------------------
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def google_unlink(request):
+    try:
+        # 현재 유저의 연동 정보를 찾아 상태를 변경합니다.
+        account = GoogleSocialAccount.objects.get(user=request.user)
+        account.is_linked = False
+        account.google_access_token = None  # 토큰도 함께 비워주는 것이 안전합니다.
+        account.save()
+        return Response({'message': '연동 해제 성공'}, status=200)
+    except GoogleSocialAccount.DoesNotExist:
+        return Response({'error': '연동된 계정이 없습니다.'}, status=404)
+    return Response({
+        'status': status_msg,
+        'token': django_token.key,
+        'nickname': user.first_name or user.username, # 닉네임이 없으면 아이디라도 보냄
         'username': user.username,
         'id': user.id,
         'google_access_token': google_access_token
