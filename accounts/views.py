@@ -235,15 +235,14 @@ def password_reset_send(request):
         print(f"SMTP Error: {e}")
         return Response({'error': '메일 발송에 실패했습니다. 관리자에게 문의하세요.'}, status=500)
 
-# 인증번호 검증 및 비밀번호 변경
+# ------------동일 이메일 유저 인증 후 보여 줄 아이디 리스트 -------------------------------
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def password_reset_confirm(request):
+def password_reset_verify(request):
     email = request.data.get('email')
     code = request.data.get('code')
-    new_password = request.data.get('new_password')
     
-    # 코드 유효성 검사
+    # 1. 인증번호 유효성 검사
     reset_entry = PasswordResetCode.objects.filter(email=email, code=code).first()
     
     if not reset_entry:
@@ -253,15 +252,41 @@ def password_reset_confirm(request):
         reset_entry.delete()
         return Response({'error': '인증번호가 만료되었습니다. 다시 시도해주세요.'}, status=400)
 
-    # 비밀번호 업데이트
-    user = User.objects.get(email=email)
-    user.set_password(new_password)
-    user.save()
+    # 2. 인증 성공 시, 해당 이메일과 연동된 모든 아이디(username) 찾기
+    users = User.objects.filter(email=email)
+    user_list = [
+        {'username': u.username, 'nickname': u.first_name or u.username} 
+        for u in users
+    ]
     
-    # 사용한 코드 삭제
-    reset_entry.delete()
+    return Response({
+        'message': '인증번호가 확인되었습니다.',
+        'user_list': user_list  # 프론트엔드에서 이 목록을 사용자에게 보여줍니다.
+    }, status=200)
+
+# 인증번호 검증 및 비밀번호 변경 ---------------------------------------------------
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def password_reset_confirm(request):
+    email = request.data.get('email')
+    code = request.data.get('code')
+    username = request.data.get('username') #  프론트에서 선택된 아이디를 보냅니다.
+    new_password = request.data.get('new_password')
     
-    return Response({'message': '비밀번호가 성공적으로 변경되었습니다.'}, status=200)
+    # 보안을 위해 코드 다시 확인
+    reset_entry = PasswordResetCode.objects.filter(email=email, code=code).first()
+    if not reset_entry or not reset_entry.is_valid():
+        return Response({'error': '유효하지 않은 요청입니다.'}, status=400)
+
+    #  정확히 이메일과 아이디가 일치하는 유저만 선택하여 변경
+    try:
+        user = User.objects.get(email=email, username=username)
+        user.set_password(new_password)
+        user.save()
+        reset_entry.delete()
+        return Response({'message': f'[{username}] 계정의 비밀번호가 변경되었습니다.'}, status=200)
+    except User.DoesNotExist:
+        return Response({'error': '일치하는 사용자 정보가 없습니다.'}, status=404)
 # --------------------------------------------------------------------
 
 

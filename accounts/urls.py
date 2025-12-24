@@ -23,6 +23,7 @@ urlpatterns = [
     # 아이디 찾기
     path('find-id/', views.find_id, name='find_id'),
     # 구글 SMTP 활용해서 , 비밀번호 찾기
+    path('password-reset-verify/', views.password_reset_verify, name='password_reset_verify'),
     path('password-reset-send/', views.password_reset_send),
-    path('password-reset-confirm/', views.password_reset_confirm),
+    path('password-reset-confirm/', views.password_reset_confirm, name='password_reset_confirm'),
 ]
