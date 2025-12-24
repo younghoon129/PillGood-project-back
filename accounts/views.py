@@ -287,6 +287,17 @@ def follow(request, user_pk):
     }
     return JsonResponse(context)
 
+# ----------------- 신규회원인지 확인 --------------------------
+def check_is_new_user(user):
+    """
+    🚩 신규 유저(추가 정보 입력 필요) 판별 함수
+    성별이나 나이 정보가 없으면 True를 반환하여 마이페이지 환영 모달을 띄우게 합니다.
+    """
+    if not (user.gender and user.age):
+        return True
+    return False
+# ------------------------------------------------------------
+
 
 # -------------------------------------------------------------
 # 카카오 로그인 코드 
@@ -344,6 +355,7 @@ def kakao_login(request):
         'username': user.username,
         'nickname': user.first_name, # [수정] 접두사 제거하고 순수 이름만 전송
         'provider': 'kakao',         # [추가] 프론트 배지 표시용
+        'is_new_user': check_is_new_user(user),
         'message': '카카오 로그인 성공'
     })
 
@@ -385,8 +397,7 @@ def naver_login(request):
             'first_name': naver_nickname,
             'email': user_response_data.get('email', ''),
             'password': get_random_string(32),
-            'age': 20,
-            'gender': 'M'
+            
         }
     )
 
@@ -397,7 +408,8 @@ def naver_login(request):
     return Response({
         'token': token.key,
         'username': user.username,
-        'nickname': user.first_name, # [수정] 접두사 제거
+        'nickname': user.first_name or user.username, # [수정] 접두사 제거
+        'is_new_user': check_is_new_user(user),
         'provider': 'naver',         # [추가] 프론트 배지 표시용
     })
 # -------------------------------------------------------------
@@ -436,8 +448,7 @@ def google_callback(request):
     google_id = user_info.get('id')
     email = user_info.get('email')
 
-    print(f"현재 접속 유저: {request.user}") 
-    print(f"인증 여부: {request.user.is_authenticated}")
+    
 
     # 🚩 [케이스 1] 이미 로그인된 유저(자체 회원/타 소셜)가 연동을 시도하는 경우
     if request.user.is_authenticated:
@@ -473,6 +484,7 @@ def google_callback(request):
         'nickname': user.first_name or user.username,
         'username': user.username,  # 자체 회원의 경우 원래 아이디가 반환됨
         'id': user.id,
+        'is_new_user': check_is_new_user(user),
         'google_access_token': google_access_token # 프론트에서 캘린더 등록 시 사용
     }, status=200)
 
