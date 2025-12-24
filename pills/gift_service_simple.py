@@ -12,7 +12,7 @@ load_dotenv()
 # ==========================================
 GMS_KEY = os.getenv("GMS_KEY")  # SSAFY에서 발급받은 GMS 키를 입력하세요
 BASE_URL = "https://gms.ssafy.io/gmsapi/generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent"
-DATA_FILE = "C:\\Users\\Administrator\Desktop\\back\\PillGood-project-back\\pills\\fixtures\\pills_lite_final.json"
+DATA_FILE = "pills\fixtures\pills_lite_final.json"
 
 # SSL 인증서 검증 실패 시 경고 메시지 숨기기
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

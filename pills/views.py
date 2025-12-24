@@ -39,6 +39,8 @@ from .utils import get_purchase_link
 from rest_framework.views import APIView
 from .utils import get_pill_recommendation
 from accounts.models import GoogleSocialAccount
+from django.core.cache import cache
+
 
 # Index 페이지
 # 장르별 필터링
@@ -46,10 +48,27 @@ from accounts.models import GoogleSocialAccount
 @api_view(['GET'])
 @permission_classes([AllowAny]) # 로그인 없이도 누구나 볼 수 있게 설정
 def index(request):
-    pills = Pill.objects.exclude(price=-1).order_by('-pk')
-    search_type = request.GET.get('search_type') # 예: 'name', 'company', 'ingredient', 'shape'
-    keyword = request.GET.get('keyword') # 예: '비타민', '종근당'
-
+    # search_type = request.GET.get('search_type') # 예: 'name', 'company', 'ingredient', 'shape'
+    # keyword = request.GET.get('keyword') # 예: '비타민', '종근당'
+    page = request.GET.get('page', 1)
+    search_type = request.GET.get('search_type', '')
+    keyword = request.GET.get('keyword', '')
+    shapes = request.GET.get('shapes', '')
+    
+    cache_key = f"pill_index_{search_type}_{keyword}_{shapes}_{page}"
+    print(f"🔑 생성된 캐시 키: [{cache_key}]")
+    cached_data = cache.get(cache_key)
+    if cached_data:
+        # 데이터가 있으면? DB 조회 없이 바로 리턴! (0.001초 소요)
+        print("✅ 캐시 적중! (DB 조회 안 함)")
+        return Response(cached_data)
+    else:
+        print("❌ 캐시 없음... DB 조회하러 감 🐢") # 확인용
+    
+    
+    pills = Pill.objects.exclude(price=-1).prefetch_related('nutrient_details', 'category').order_by('-pk')
+    # pills = Pill.objects.exclude(price=-1).order_by('-pk')
+    
     if keyword:
         # [제품명]으로 검색
         if search_type == 'name':
@@ -111,27 +130,40 @@ def index(request):
     #         'description': pill.STDR_STND, # 성분/설명
     #         'cover': pill.cover if pill.cover else None, # 이미지
     #     })
-    serializer = PillListSerializer(result_page, many=True)
+    serializer = PillListSerializer(result_page, many=True, context={'request': request})
+    final_response_data = paginator.get_paginated_response(serializer.data).data
     # JSON 형태로 응답 (render가 아님!)
-    return paginator.get_paginated_response(serializer.data)
+    cache.set(cache_key, final_response_data, 1800)
+    
+    return Response(final_response_data)
+    # return paginator.get_paginated_response(serializer.data)
     # return JsonResponse({'pills': pills_data})
 
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def detail(request, pill_pk):
-    pill = get_object_or_404(Pill, pk=pill_pk)
+    cache_key = f"pill_detail_{pill_pk}"
+    
+    cached_data = cache.get(cache_key)
+
+    if cached_data:
+        # 캐시에 데이터가 있으면? 
+        # DB 조회도 안 하고, 네이버 크롤링도 안 하고 바로 리턴! (속도 최강)
+        print(f"✅ [Cache] {pill_pk}번 영양제 캐시 적중!")
+        return Response(cached_data)
+    
+    pill = get_object_or_404(Pill.objects.prefetch_related('nutrient_details', 'category'), pk=pill_pk)
+    # pill = get_object_or_404(Pill, pk=pill_pk)
 
     print(f"\n📢 [DEBUG] ID: {pill.id} / 제품명: {pill.PRDLST_NM}")
     
     # 🔥 [수정 포인트]
-    # 1. '자미오리' 제품이거나 (잘못된 링크 수정용)
     # 2. URL이 없거나
     # 3. 가격이 없거나 실패(-1)했던 경우
     # -> 무조건 검색 로직 실행!
-    force_update = (pill.PRDLST_NM == '자미오리') # 자미오리만 강제 검색
-    
-    if force_update or not pill.purchase_url or pill.price == -1 or pill.price is None or pill.price == 0:
+        
+    if not pill.purchase_url or pill.price == -1 or pill.price is None or pill.price == 0:
         print("🚀 네이버 검색 API 호출 시작... (검증 로직 적용됨)")
         
         # utils.py의 개선된 함수 호출 (기업명 검증 포함)
@@ -156,7 +188,9 @@ def detail(request, pill_pk):
         print("⚡ 이미 데이터가 있어서 생략함")
 
     serializer = PillDetailSerializer(pill)
-    return Response(serializer.data)
+    final_data = serializer.data
+    cache.set(cache_key, final_data, 1800)
+    return Response(final_data)
 
 
 @api_view(['GET'])
@@ -443,7 +477,10 @@ def thread_list(request, pill_pk):
     # 2. 해당 영양제에 연결된 모든 후기(Thread)를 최신순으로 가져오기
     # Pill 모델에 related_name이 명시되어 있다면 해당 이름을 사용해도 됩니다.
     # 여기서는 Thread 모델이 pill 필드를 가지고 있다고 가정합니다.
-    threads = pill.thread_set.all().annotate(
+    # threads = pill.thread_set.all().annotate(
+    #     comment_count=Count('comments') 
+    # ).order_by('-pk')
+    threads = pill.thread_set.all().select_related('user').annotate(
         comment_count=Count('comments') 
     ).order_by('-pk')
     
@@ -490,8 +527,11 @@ def substance_pills(request, substance_id):
     # [1] 기본 검색: 해당 성분이 포함된 영양제 찾기
     # models.py 구조: Pill <-> Nutrient <-> Substance
     # Nutrient 모델의 'substance' 필드를 통해 역참조하여 Pill을 찾습니다.
-    pills = Pill.objects.filter(nutrient_details__substance=substance).exclude(price=-1).distinct()
-
+    # pills = Pill.objects.filter(nutrient_details__substance=substance).exclude(price=-1).distinct()
+    pills = Pill.objects.filter(nutrient_details__substance=substance)\
+                .exclude(price=-1)\
+                .prefetch_related('nutrient_details', 'category')\
+                .distinct()
     # [2] 카테고리 필터링 (교집합)
     categories_param = request.GET.get('category')
     if categories_param:
