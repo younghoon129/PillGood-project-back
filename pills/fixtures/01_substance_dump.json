@@ -1,0 +1,1712 @@
+[
+{
+  "model": "pills.substance",
+  "pk": 1,
+  "fields": {
+    "name": "실리마린",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 2,
+  "fields": {
+    "name": "코엔자임Q10",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 3,
+  "fields": {
+    "name": "글루타치온(미백)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 4,
+  "fields": {
+    "name": "비타민B1",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 5,
+  "fields": {
+    "name": "비타민B2",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 6,
+  "fields": {
+    "name": "비타민B6",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 7,
+  "fields": {
+    "name": "비타민B12",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 8,
+  "fields": {
+    "name": "셀레늄",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 9,
+  "fields": {
+    "name": "아연",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 10,
+  "fields": {
+    "name": "비타민C",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 11,
+  "fields": {
+    "name": "비타민E",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 12,
+  "fields": {
+    "name": "양배추추출물",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 13,
+  "fields": {
+    "name": "감초추출물",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 14,
+  "fields": {
+    "name": "매실추출물",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 15,
+  "fields": {
+    "name": "효소",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 16,
+  "fields": {
+    "name": "알파아밀라아제(효소)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 17,
+  "fields": {
+    "name": "프로테아제(효소)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 18,
+  "fields": {
+    "name": "프로바이오틱스(유산균)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 19,
+  "fields": {
+    "name": "알로에 전잎(장건강)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 20,
+  "fields": {
+    "name": "오메가3(혈행)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 21,
+  "fields": {
+    "name": "EPA(오메가3)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 22,
+  "fields": {
+    "name": "DHA(오메가3)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 23,
+  "fields": {
+    "name": "칼륨",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 24,
+  "fields": {
+    "name": "엽산(비타민B9)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 25,
+  "fields": {
+    "name": "나토키나제(혈행)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 26,
+  "fields": {
+    "name": "단신수(혈행)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 27,
+  "fields": {
+    "name": "마그네슘",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 28,
+  "fields": {
+    "name": "프로폴리스(항산화)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 29,
+  "fields": {
+    "name": "플라보노이드(프로폴리스)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 30,
+  "fields": {
+    "name": "배(도라지 등 혼합 가능성 있음)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 31,
+  "fields": {
+    "name": "비타민D",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 32,
+  "fields": {
+    "name": "칼슘",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 33,
+  "fields": {
+    "name": "해조칼슘(칼슘)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 34,
+  "fields": {
+    "name": "초유(데이터엔 없으나 일반적 매핑)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 35,
+  "fields": {
+    "name": "철분",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 36,
+  "fields": {
+    "name": "쏘팔메토",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 37,
+  "fields": {
+    "name": "로르산(쏘팔메토)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 38,
+  "fields": {
+    "name": "야관문",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 39,
+  "fields": {
+    "name": "마카",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 40,
+  "fields": {
+    "name": "아르기닌(아미노산)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 41,
+  "fields": {
+    "name": "옥타코사놀(지구력)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 42,
+  "fields": {
+    "name": "대두이소플라본(뼈건강)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 43,
+  "fields": {
+    "name": "감마리놀렌산(오메가6)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 44,
+  "fields": {
+    "name": "히알루론산(피부보습)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 45,
+  "fields": {
+    "name": "석류(엘라그산)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 46,
+  "fields": {
+    "name": "포스파티딜세린(뇌건강)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 47,
+  "fields": {
+    "name": "스핑고마이엘린(뇌건강)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 48,
+  "fields": {
+    "name": "피브로인(기억력)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 49,
+  "fields": {
+    "name": "테아닌(스트레스 완화)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 50,
+  "fields": {
+    "name": "GABA(수면/스트레스)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 51,
+  "fields": {
+    "name": "로즈마리산(레몬밤)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 52,
+  "fields": {
+    "name": "락티움(수면)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 53,
+  "fields": {
+    "name": "감태추출물(수면)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 54,
+  "fields": {
+    "name": "미강주정추출물(수면)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 55,
+  "fields": {
+    "name": "타트체리(수면)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 56,
+  "fields": {
+    "name": "루테인(마리골드꽃)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 57,
+  "fields": {
+    "name": "지아잔틴(마리골드꽃)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 58,
+  "fields": {
+    "name": "아스타잔틴(헤마토코쿠스)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 59,
+  "fields": {
+    "name": "안토시아노사이드(빌베리)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 60,
+  "fields": {
+    "name": "레티놀(비타민A)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 61,
+  "fields": {
+    "name": "베타카로틴(비타민A)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 62,
+  "fields": {
+    "name": "비타민A",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 63,
+  "fields": {
+    "name": "헤스페리딘(혈행)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 64,
+  "fields": {
+    "name": "비타민K",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 65,
+  "fields": {
+    "name": "글루코사민(관절)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 66,
+  "fields": {
+    "name": "N-아세틸글루코사민(관절)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 67,
+  "fields": {
+    "name": "MSM(식이유황)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 68,
+  "fields": {
+    "name": "콘드로이친(연골)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 69,
+  "fields": {
+    "name": "뮤코다당단백(콘드로이친)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 70,
+  "fields": {
+    "name": "보스웰릭산(보스웰리아)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 71,
+  "fields": {
+    "name": "초록입홍합추출물",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 72,
+  "fields": {
+    "name": "로즈힙추출물",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 73,
+  "fields": {
+    "name": "구연산칼슘(칼슘)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 74,
+  "fields": {
+    "name": "유청칼슘(칼슘)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 75,
+  "fields": {
+    "name": "비피더스균(유산균)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 76,
+  "fields": {
+    "name": "락토바실러스(유산균)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 77,
+  "fields": {
+    "name": "프리바이오틱스(유산균 먹이)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 78,
+  "fields": {
+    "name": "프락토올리고당(프리바이오틱스)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 79,
+  "fields": {
+    "name": "갈락토올리고당(프리바이오틱스)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 80,
+  "fields": {
+    "name": "식이섬유",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 81,
+  "fields": {
+    "name": "차전자피(식이섬유)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 82,
+  "fields": {
+    "name": "난소화성말토덱스트린(식이섬유)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 83,
+  "fields": {
+    "name": "구아검(식이섬유)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 84,
+  "fields": {
+    "name": "콜라겐(피부)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 85,
+  "fields": {
+    "name": "세라마이드(피부장벽)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 86,
+  "fields": {
+    "name": "엘라스틴(피부탄력)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 87,
+  "fields": {
+    "name": "스피루리나",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 88,
+  "fields": {
+    "name": "클로렐라(엽록소)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 89,
+  "fields": {
+    "name": "비오틴(비타민B7)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 90,
+  "fields": {
+    "name": "홍삼(면역/피로)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 91,
+  "fields": {
+    "name": "인삼(면역/피로)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 92,
+  "fields": {
+    "name": "진세노사이드(홍삼/인삼)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 93,
+  "fields": {
+    "name": "베타글루칸(면역)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 94,
+  "fields": {
+    "name": "락토페린(면역)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 95,
+  "fields": {
+    "name": "폴리감마글루탐산(면역)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 96,
+  "fields": {
+    "name": "알콕시글리세롤(상어간유)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 97,
+  "fields": {
+    "name": "스쿠알렌(상어간유)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 98,
+  "fields": {
+    "name": "코디세핀(동충하초)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 99,
+  "fields": {
+    "name": "망간",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 100,
+  "fields": {
+    "name": "구리",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 101,
+  "fields": {
+    "name": "SOD(항산화효소)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 102,
+  "fields": {
+    "name": "가르시니아(HCA)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 103,
+  "fields": {
+    "name": "카테킨(녹차추출물)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 104,
+  "fields": {
+    "name": "시서스(다이어트)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 105,
+  "fields": {
+    "name": "풋사과추출물(다이어트)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 106,
+  "fields": {
+    "name": "CLA(공액리놀렌산)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 107,
+  "fields": {
+    "name": "잔티젠(다이어트)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 108,
+  "fields": {
+    "name": "핑거루트(판두라틴)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 109,
+  "fields": {
+    "name": "포스콜린(콜레우스)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 110,
+  "fields": {
+    "name": "L-카르니틴(다이어트/운동)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 111,
+  "fields": {
+    "name": "단백질",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 112,
+  "fields": {
+    "name": "아미노산",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 113,
+  "fields": {
+    "name": "BCAA(아미노산)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 114,
+  "fields": {
+    "name": "크레아틴(근육)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 115,
+  "fields": {
+    "name": "글루타민(아미노산)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 116,
+  "fields": {
+    "name": "총 엽록소(스피루리나)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 117,
+  "fields": {
+    "name": "키토산",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 118,
+  "fields": {
+    "name": "비타민(기타)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 119,
+  "fields": {
+    "name": "나이아신(비타민B3)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 120,
+  "fields": {
+    "name": "EPA와 DHA의 합(오메가3)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 121,
+  "fields": {
+    "name": "HCA(가르시니아)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 122,
+  "fields": {
+    "name": "Hyperoside",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 123,
+  "fields": {
+    "name": "공액리놀레산",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 124,
+  "fields": {
+    "name": "인지질(크릴오일/레시틴)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 125,
+  "fields": {
+    "name": "판토텐산(비타민B5)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 126,
+  "fields": {
+    "name": "로사빈(홍경천)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 127,
+  "fields": {
+    "name": "디엑콜(감태추출물)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 128,
+  "fields": {
+    "name": "크롬",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 129,
+  "fields": {
+    "name": "Hydroxycitric acid",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 130,
+  "fields": {
+    "name": "코로솔산(바나바잎)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 131,
+  "fields": {
+    "name": "안트라퀴논",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 132,
+  "fields": {
+    "name": "몰리브덴",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 133,
+  "fields": {
+    "name": "요오드",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 134,
+  "fields": {
+    "name": "총(-)-hydroxycitric acid",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 135,
+  "fields": {
+    "name": "플라보놀배당체",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 136,
+  "fields": {
+    "name": "갈산(보이차추출물)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 137,
+  "fields": {
+    "name": "알리인(마늘)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 138,
+  "fields": {
+    "name": "소포리코사이드",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 139,
+  "fields": {
+    "name": "키토올리고당",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 140,
+  "fields": {
+    "name": "클로로겐산(그린커피빈)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 141,
+  "fields": {
+    "name": "홍경천추출물",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 142,
+  "fields": {
+    "name": "모나콜린",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 143,
+  "fields": {
+    "name": "다물린A(돌외잎)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 144,
+  "fields": {
+    "name": "시아니딘",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 145,
+  "fields": {
+    "name": "세린",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 146,
+  "fields": {
+    "name": "EGCG(녹차추출물)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 147,
+  "fields": {
+    "name": "엘라그산(석류)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 148,
+  "fields": {
+    "name": "Linarin",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 149,
+  "fields": {
+    "name": "데커신(참당귀)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 150,
+  "fields": {
+    "name": "글리신",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 151,
+  "fields": {
+    "name": "밀크씨슬",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 152,
+  "fields": {
+    "name": "피니톨",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 153,
+  "fields": {
+    "name": "루틴",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 154,
+  "fields": {
+    "name": "Loganin",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 155,
+  "fields": {
+    "name": "자일로올리고당(프리바이오틱스)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 156,
+  "fields": {
+    "name": "퀸산(민들레)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 157,
+  "fields": {
+    "name": "DamulinA",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 158,
+  "fields": {
+    "name": "비텍신",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 159,
+  "fields": {
+    "name": "피브린용해효소활성",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 160,
+  "fields": {
+    "name": "Secoxyloganin",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 161,
+  "fields": {
+    "name": "Formononetin",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 162,
+  "fields": {
+    "name": "비타민k",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 163,
+  "fields": {
+    "name": "hydroxycitric acid",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 164,
+  "fields": {
+    "name": "자일리톨",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 165,
+  "fields": {
+    "name": "케르세틴(항산화)",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 166,
+  "fields": {
+    "name": "알로인",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 167,
+  "fields": {
+    "name": "총 폴리페놀",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 168,
+  "fields": {
+    "name": "4-Hydroxy-L-isoleucine",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 169,
+  "fields": {
+    "name": "구연산",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 170,
+  "fields": {
+    "name": "깅콜릭산",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+},
+{
+  "model": "pills.substance",
+  "pk": 171,
+  "fields": {
+    "name": "Gallic Acid",
+    "efficacy": "데이터 설명",
+    "side_effects": "데이터 설명",
+    "recommended_intake": "데이터 설명"
+  }
+}
+]

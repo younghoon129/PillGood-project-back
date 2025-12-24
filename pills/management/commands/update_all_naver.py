@@ -1,3 +1,5 @@
+# 이미지 -1 이거나 NULL 인 것들 다시 찾음, 이미지 주소 없으면 -1 표시
+
 from django.core.management.base import BaseCommand
 from pills.models import Pill
 from pills.utils import get_purchase_link

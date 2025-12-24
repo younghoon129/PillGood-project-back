@@ -1,121 +1,121 @@
 [
-    {
-        "model": "accounts.allergy",
-        "pk": 1,
-        "fields": {
-            "name": "우유"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 2,
-        "fields": {
-            "name": "돼지고기(젤라틴)"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 3,
-        "fields": {
-            "name": "대두"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 4,
-        "fields": {
-            "name": "밀"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 5,
-        "fields": {
-            "name": "게/새우"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 6,
-        "fields": {
-            "name": "계란"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 7,
-        "fields": {
-            "name": "메밀"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 8,
-        "fields": {
-            "name": "땅콩"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 9,
-        "fields": {
-            "name": "복숭아"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 10,
-        "fields": {
-            "name": "토마토"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 11,
-        "fields": {
-            "name": "호두"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 12,
-        "fields": {
-            "name": "닭고기"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 13,
-        "fields": {
-            "name": "쇠고기"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 14,
-        "fields": {
-            "name": "오징어"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 15,
-        "fields": {
-            "name": "조개류"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 16,
-        "fields": {
-            "name": "잣"
-        }
-    },
-    {
-        "model": "accounts.allergy",
-        "pk": 17,
-        "fields": {
-            "name": "참깨"
-        }
+  {
+    "model": "accounts.allergy",
+    "pk": 1,
+    "fields": {
+      "name": "우유"
     }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 2,
+    "fields": {
+      "name": "돼지고기(젤라틴)"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 3,
+    "fields": {
+      "name": "대두"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 4,
+    "fields": {
+      "name": "밀"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 5,
+    "fields": {
+      "name": "게/새우"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 6,
+    "fields": {
+      "name": "계란"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 7,
+    "fields": {
+      "name": "메밀"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 8,
+    "fields": {
+      "name": "땅콩"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 9,
+    "fields": {
+      "name": "복숭아"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 10,
+    "fields": {
+      "name": "토마토"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 11,
+    "fields": {
+      "name": "호두"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 12,
+    "fields": {
+      "name": "닭고기"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 13,
+    "fields": {
+      "name": "쇠고기"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 14,
+    "fields": {
+      "name": "오징어"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 15,
+    "fields": {
+      "name": "조개류"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 16,
+    "fields": {
+      "name": "잣"
+    }
+  },
+  {
+    "model": "accounts.allergy",
+    "pk": 17,
+    "fields": {
+      "name": "참깨"
+    }
+  }
 ]
