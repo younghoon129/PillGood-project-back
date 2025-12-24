@@ -539,14 +539,7 @@ def google_unlink(request):
         return Response({'message': '연동 해제 성공'}, status=200)
     except GoogleSocialAccount.DoesNotExist:
         return Response({'error': '연동된 계정이 없습니다.'}, status=404)
-    return Response({
-        'status': status_msg,
-        'token': django_token.key,
-        'nickname': user.first_name or user.username, # 닉네임이 없으면 아이디라도 보냄
-        'username': user.username,
-        'id': user.id,
-        'google_access_token': google_access_token
-    }, status=200)
+    
 # --------------------------------------------------------------------
 # def profile(request, username):
 #     User = get_user_model()

@@ -615,7 +615,7 @@ def register_google_calendar(request):
             'reminders': {
                 'useDefault': False,
                 'overrides': [
-                    {'method': 'popup', 'minutes': 10},
+                    {'method': 'popup', 'minutes': 0},
                 ],
             },
         }
@@ -631,6 +631,7 @@ def register_google_calendar(request):
             return Response({"message": "구글 캘린더 일정 등록 성공"}, status=200)
         else:
             # 토큰이 만료된 경우 구글이 401 에러를 보냄
+            print(f"요청 유저: {request.user}")
             return Response({
                 "error": "구글 API 인증 오류",
                 "detail": res.json()
